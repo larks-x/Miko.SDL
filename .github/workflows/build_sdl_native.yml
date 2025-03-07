@@ -55,7 +55,7 @@ jobs:
             -e BUILD_TYPE=${{ env.BUILD_TYPE }}
           run: |
             cd /workspace
-            ./External/build.sh
+            ./external/build.sh
 
       - name: Build
         if: ${{ !contains(matrix.platform.container, 'arm') }}
@@ -65,7 +65,7 @@ jobs:
           TARGET_APT_ARCH: ${{ matrix.platform.target_apt_arch }}
           RUNNER_OS: ${{ runner.os }}
           FLAGS: ${{ matrix.platform.flags }}
-        run: ./External/build.sh
+        run: ./external/build.sh
 
       - name: Get Actions user id
         if: runner.os == 'Linux'
