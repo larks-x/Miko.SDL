@@ -80,8 +80,8 @@ jobs:
         run: |
           echo $PWD
           cd ./external
-          chmod +x $PWD/external/build.sh
-          ./external/build.sh
+          chmod +x $PWD/build.sh
+          ./build.sh
 
       - name: Get Actions user id
         if: runner.os == 'Linux'
