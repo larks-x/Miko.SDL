@@ -66,7 +66,9 @@ jobs:
           RUNNER_OS: ${{ runner.os }}
           FLAGS: ${{ matrix.platform.flags }}
         run: |
+          echo $PWD
           cd ./external
+          echo $PWD
           ./build.sh
 
       - name: Get Actions user id
