@@ -12,6 +12,7 @@ fi
 
 SUDO=$(which sudo || exit 0)
 
+
 if [[ $RUNNER_OS == 'Linux' ]]; then
 # Setup Linux dependencies
     if [[ $TARGET_APT_ARCH == :i386 ]]; then
@@ -103,13 +104,10 @@ popd
 
 # Move build lib into correct folders
 if [[ $RUNNER_OS == 'Windows' ]]; then
-    mkdir -p native/$NAME
     cp SDL/install_output/bin/SDL3.dll ../native/$NAME/SDL3.dll
 elif [[ $RUNNER_OS == 'Linux' ]]; then
-    mkdir -p native/$NAME
     cp SDL/install_output/lib/libSDL3.so ../native/$NAME/libSDL3.so
 elif [[ $RUNNER_OS == 'macOS' ]]; then
-    mkdir -p native/$NAME
     cp SDL/install_output/lib/libSDL3.dylib ../native/$NAME/libSDL3.dylib
 fi
 
