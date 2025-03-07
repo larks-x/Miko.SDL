@@ -26,36 +26,20 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          #- { name: win-x64,     os: windows-latest, flags: -A x64 }
-          #- { name: win-x86,     os: windows-latest, flags: -A Win32 }
-          #- { name: win-arm64,   os: windows-latest, flags: -A ARM64 }
-          - { name: linux-x64,   os: ubuntu-20.04,   flags: -GNinja, target_apt_arch: ":amd64" }
-          #- { name: linux-x86,   os: ubuntu-20.04,   flags: -GNinja -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32", target_apt_arch: ":i386" }
-          #- { name: linux-arm64, os: ubuntu-20.04,   flags: -GNinja, target_apt_arch: ":arm64", container: arm64v8/ubuntu, docker_platform: linux/arm64/v8 }
-          #- { name: linux-arm,   os: ubuntu-20.04,   flags: -GNinja, target_apt_arch: ":armhf", container: arm32v7/ubuntu, docker_platform: linux/arm/v7 }
-          #- { name: osx-x64,     os: macos-latest,   flags: -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14 }
-          # NOTE: macOS 11.0 is the first released supported by Apple Silicon.
-          #- { name: osx-arm64,   os: macos-latest,   flags: -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 }
+          # - { name: win-x64,     os: windows-latest,   flags: -A x64 }
+          # - { name: win-x86,     os: windows-latest,   flags: -A Win32 }
+          # - { name: win-arm64,   os: windows-latest,   flags: -A ARM64 }
+          - { name: linux-x64,   os: ubuntu-22.04,     flags: -GNinja, target_apt_arch: ":amd64" }
+          # - { name: linux-x86,   os: ubuntu-22.04,     flags: -GNinja -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32", target_apt_arch: ":i386" }
+          # - { name: linux-arm64, os: ubuntu-22.04-arm, flags: -GNinja, target_apt_arch: ":arm64", container: "arm64v8/ubuntu:22.04" }
+          # - { name: linux-arm,   os: ubuntu-22.04-arm, flags: -GNinja, target_apt_arch: ":armhf", container: "arm32v7/ubuntu:22.04" }
+          # - { name: osx-x64,     os: macos-latest,     flags: -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14 }
+          # # NOTE: macOS 11.0 is the first released supported by Apple Silicon.
+          # - { name: osx-arm64,   os: macos-latest,     flags: -DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 }
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
-
-      - name: Set up QEMU
-        if: contains(matrix.platform.container, 'arm')
-        uses: docker/setup-qemu-action@v3
-
-      # - name: Prepare release directory, (Windows/Linux/OSX)
-      #   run: |
-      #     mkdir -p native/linux-arm
-      #     mkdir -p native/linux-arm64
-      #     mkdir -p native/linux-x64
-      #     mkdir -p native/linux-x86
-      #     mkdir -p native/osx-arm64
-      #     mkdir -p native/osx-x64
-      #     mkdir -p native/win-arm64
-      #     mkdir -p native/win-x64
-      #     mkdir -p native/win-x86
 
       - name: Build (Linux ARM)
         if: contains(matrix.platform.container, 'arm')
@@ -69,8 +53,9 @@ jobs:
             -e RUNNER_OS=${{ runner.os }}
             -e FLAGS=${{ matrix.platform.flags }}
             -e BUILD_TYPE=${{ env.BUILD_TYPE }}
-            --platform ${{ matrix.platform.docker_platform }}
-          run: ./external/build.sh
+          run: |
+            cd /workspace
+            ./External/build.sh
 
       - name: Build
         if: ${{ !contains(matrix.platform.container, 'arm') }}
@@ -80,7 +65,7 @@ jobs:
           TARGET_APT_ARCH: ${{ matrix.platform.target_apt_arch }}
           RUNNER_OS: ${{ runner.os }}
           FLAGS: ${{ matrix.platform.flags }}
-        run: ./external/build.sh
+        run: ./External/build.sh
 
       - name: Get Actions user id
         if: runner.os == 'Linux'
@@ -112,7 +97,7 @@ jobs:
   #         submodules: true
 
   #     - name: Build (iOS)
-  #       run: xcodebuild -project external/SDL/Xcode/SDL/SDL.xcodeproj -target SDL3.xcframework -configuration Release
+  #       run: xcodebuild -project External/SDL/Xcode/SDL/SDL.xcodeproj -target SDL3.xcframework -configuration Release
 
   #     - name: Prepare release directory (iOS)
   #       run: mkdir -p native/ios
@@ -121,11 +106,11 @@ jobs:
   #       run: |
   #         mkdir -p native/ios/SDL3.xcframework/ios-arm64/SDL3.framework;
   #         mkdir -p native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework;
-  #         cp external/SDL/Xcode/SDL/build/SDL3.xcframework/Info.plist                                           native/ios/SDL3.xcframework/Info.plist;
-  #         cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3                        native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3;
-  #         cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist                  native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist;
-  #         cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3       native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3;
-  #         cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist;
+  #         cp External/SDL/Xcode/SDL/build/SDL3.xcframework/Info.plist                                           native/ios/SDL3.xcframework/Info.plist;
+  #         cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3                        native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3;
+  #         cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist                  native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist;
+  #         cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3       native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3;
+  #         cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist;
 
   #     - name: Compress native directory
   #       run: tar -cf native-ios.tar native/ios
@@ -137,9 +122,9 @@ jobs:
   #         path: native-ios.tar
   #         if-no-files-found: error
 
-  #  build-android:
+  # build-android:
   #   name: android
-  #   runs-on: ubuntu-20.04
+  #   runs-on: ubuntu-22.04
   #   env:
   #     NDK_VER: 23.1.7779620
   #     PLATFORM_VER: android-34
@@ -173,7 +158,7 @@ jobs:
   #         rm -rf $OUTPUT && mkdir -p $OUTPUT
 
   #         # Build SDL3
-  #         ./external/SDL/build-scripts/androidbuildlibs.sh APP_ABI="armeabi-v7a arm64-v8a x86 x86_64" NDK_LIBS_OUT="$OUTPUT"
+  #         ./External/SDL/build-scripts/androidbuildlibs.sh APP_ABI="armeabi-v7a arm64-v8a x86 x86_64" NDK_LIBS_OUT="$OUTPUT"
 
   #     - name: Build SDL3 Android Java
   #       run: |
@@ -183,7 +168,7 @@ jobs:
   #         rm -rf $OUTPUT && mkdir -p $OUTPUT
 
   #         # Build SDL3 Android Java part
-  #         cd ./external/SDL/android-project/app/src/main/java
+  #         cd ./External/SDL/android-project/app/src/main/java
   #         javac -cp $ANDROID_HOME/platforms/$PLATFORM_VER/android.jar -encoding utf8 org/libsdl/app/*.java
   #         jar cvf $OUTPUT/SDL3AndroidBridge.jar org/libsdl/app/*.class
 
