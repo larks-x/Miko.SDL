@@ -80,7 +80,7 @@ jobs:
         run: |
           echo $PWD
           cd ./external
-          chmod +x ./external/build.sh
+          chmod +x $PWD/external/build.sh
           ./external/build.sh
 
       - name: Get Actions user id
