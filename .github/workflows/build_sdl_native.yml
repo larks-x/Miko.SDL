@@ -40,6 +40,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
+      
+      - name: Prepare release directory (Windows/Linux/OSX)
+        run: |
+            mkdir -p native/linux-arm
+            mkdir -p native/linux-arm64
+            mkdir -p native/linux-x64
+            mkdir -p native/linux-x86
+            mkdir -p native/osx-arm64
+            mkdir -p native/osx-x64
+            mkdir -p native/win-arm64
+            mkdir -p native/win-x64
+            mkdir -p native/win-x86
 
       - name: Build (Linux ARM)
         if: contains(matrix.platform.container, 'arm')
@@ -68,9 +80,8 @@ jobs:
         run: |
           echo $PWD
           cd ./external
-          echo $PWD
-          chmod +x build.sh
-          $PWD/build.sh
+          chmod +x ./external/build.sh
+          ./external/build.sh
 
       - name: Get Actions user id
         if: runner.os == 'Linux'
