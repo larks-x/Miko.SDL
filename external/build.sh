@@ -1,17 +1,17 @@
 #!/bin/bash
-
+echo "into sh......................."
 set -e
 
 pushd "$(dirname "$0")"
-
+echo "into sh2222......................."
 # Check if environment variables are defined
 if [[ -z $NAME || -z $RUNNER_OS || -z $FLAGS ]]; then
     echo "One or more required environment variables are not defined."
     exit 1
 fi
-
+echo "into sh333......................."
 SUDO=$(which sudo || exit 0)
-
+echo "into sh444......................."
 if [[ $RUNNER_OS == 'Linux' ]]; then
 # Setup Linux dependencies
     if [[ $TARGET_APT_ARCH == :i386 ]]; then
