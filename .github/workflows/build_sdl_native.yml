@@ -30,7 +30,7 @@ jobs:
           - { name: win-x86,     os: windows-latest,   flags: -A Win32 }
           - { name: win-arm64,   os: windows-latest,   flags: -A ARM64 }
           - { name: linux-x64,   os: ubuntu-22.04,     flags: -GNinja, target_apt_arch: ":amd64" }
-          - { name: linux-x86,   os: ubuntu-22.04,     flags: -GNinja -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32", target_apt_arch: ":i386" }
+          # - { name: linux-x86,   os: ubuntu-22.04,     flags: -GNinja -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32", target_apt_arch: ":i386" }
           - { name: linux-arm64, os: ubuntu-22.04-arm, flags: -GNinja, target_apt_arch: ":arm64", container: "arm64v8/ubuntu:22.04" }
           - { name: linux-arm,   os: ubuntu-22.04-arm, flags: -GNinja, target_apt_arch: ":armhf", container: "arm32v7/ubuntu:22.04" }
           - { name: osx-x64,     os: macos-latest,     flags: -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14 }
@@ -116,7 +116,7 @@ jobs:
           submodules: true
 
       - name: Build (iOS)
-        run: xcodebuild -project External/SDL/Xcode/SDL/SDL.xcodeproj -target SDL3.xcframework -configuration Release
+        run: xcodebuild -project external/SDL/Xcode/SDL/SDL.xcodeproj -target SDL3.xcframework -configuration Release
 
       - name: Prepare release directory (iOS)
         run: mkdir -p native/ios
@@ -125,11 +125,11 @@ jobs:
         run: |
           mkdir -p native/ios/SDL3.xcframework/ios-arm64/SDL3.framework;
           mkdir -p native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework;
-          cp External/SDL/Xcode/SDL/build/SDL3.xcframework/Info.plist                                           native/ios/SDL3.xcframework/Info.plist;
-          cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3                        native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3;
-          cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist                  native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist;
-          cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3       native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3;
-          cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/Info.plist                                           native/ios/SDL3.xcframework/Info.plist;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3                        native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist                  native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3       native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist;
 
       - name: Compress native directory
         run: tar -cf native-ios.tar native/ios
@@ -177,7 +177,7 @@ jobs:
           rm -rf $OUTPUT && mkdir -p $OUTPUT
 
           # Build SDL3
-          ./External/SDL/build-scripts/androidbuildlibs.sh APP_ABI="armeabi-v7a arm64-v8a x86 x86_64" NDK_LIBS_OUT="$OUTPUT"
+          ./external/SDL/build-scripts/androidbuildlibs.sh APP_ABI="armeabi-v7a arm64-v8a x86 x86_64" NDK_LIBS_OUT="$OUTPUT"
 
       - name: Build SDL3 Android Java
         run: |
@@ -187,7 +187,7 @@ jobs:
           rm -rf $OUTPUT && mkdir -p $OUTPUT
 
           # Build SDL3 Android Java part
-          cd ./External/SDL/android-project/app/src/main/java
+          cd ./external/SDL/android-project/app/src/main/java
           javac -cp $ANDROID_HOME/platforms/$PLATFORM_VER/android.jar -encoding utf8 org/libsdl/app/*.java
           jar cvf $OUTPUT/SDL3AndroidBridge.jar org/libsdl/app/*.class
 
