@@ -69,6 +69,7 @@ jobs:
           echo $PWD
           cd ./external
           echo $PWD
+          chmod +x build.sh
           $PWD/build.sh
 
       - name: Get Actions user id
