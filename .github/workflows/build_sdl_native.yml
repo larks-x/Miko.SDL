@@ -69,6 +69,7 @@ jobs:
           echo $PWD
           cd ./external
           echo $PWD
+          SUDO=$(which sudo || exit 0)
           ./build.sh
 
       - name: Get Actions user id
