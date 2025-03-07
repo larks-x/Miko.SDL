@@ -57,6 +57,7 @@ jobs:
             -e BUILD_TYPE=${{ env.BUILD_TYPE }}
             --platform ${{ matrix.platform.docker_platform }}
           run: |
+            mkdir -p native/${{ matrix.platform.name }};
             cd /workspace
             ./external/build.sh
 
@@ -68,7 +69,9 @@ jobs:
           TARGET_APT_ARCH: ${{ matrix.platform.target_apt_arch }}
           RUNNER_OS: ${{ runner.os }}
           FLAGS: ${{ matrix.platform.flags }}
-        run: ./external/build.sh
+        run: |
+            mkdir -p native/${{ matrix.platform.name }};
+            ./external/build.sh
 
       - name: Get Actions user id
         if: runner.os == 'Linux'
