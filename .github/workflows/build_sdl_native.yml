@@ -80,9 +80,7 @@ jobs:
           TARGET_APT_ARCH: ${{ matrix.platform.target_apt_arch }}
           RUNNER_OS: ${{ runner.os }}
           FLAGS: ${{ matrix.platform.flags }}
-        run: |
-          cd /workspace
-          ./external/build.sh
+        run: ./external/build.sh
 
       - name: Get Actions user id
         if: runner.os == 'Linux'
