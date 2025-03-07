@@ -58,7 +58,7 @@ jobs:
             --platform ${{ matrix.platform.docker_platform }}
           run: |
             cd /workspace
-            ./External/build.sh
+            ./external/build.sh
 
       - name: Build
         if: ${{ !contains(matrix.platform.container, 'arm') }}
@@ -68,7 +68,7 @@ jobs:
           TARGET_APT_ARCH: ${{ matrix.platform.target_apt_arch }}
           RUNNER_OS: ${{ runner.os }}
           FLAGS: ${{ matrix.platform.flags }}
-        run: ./External/build.sh
+        run: ./external/build.sh
 
       - name: Get Actions user id
         if: runner.os == 'Linux'
@@ -100,7 +100,7 @@ jobs:
           submodules: true
 
       - name: Build (iOS)
-        run: xcodebuild -project External/SDL/Xcode/SDL/SDL.xcodeproj -target SDL3.xcframework -configuration Release
+        run: xcodebuild -project external/SDL/Xcode/SDL/SDL.xcodeproj -target SDL3.xcframework -configuration Release
 
       - name: Prepare release directory (iOS)
         run: mkdir -p native/ios
@@ -109,11 +109,11 @@ jobs:
         run: |
           mkdir -p native/ios/SDL3.xcframework/ios-arm64/SDL3.framework;
           mkdir -p native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework;
-          cp External/SDL/Xcode/SDL/build/SDL3.xcframework/Info.plist                                           native/ios/SDL3.xcframework/Info.plist;
-          cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3                        native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3;
-          cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist                  native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist;
-          cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3       native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3;
-          cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/Info.plist                                           native/ios/SDL3.xcframework/Info.plist;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3                        native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist                  native/ios/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3       native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist;
 
       - name: Compress native directory
         run: tar -cf native-ios.tar native/ios
@@ -161,7 +161,7 @@ jobs:
           rm -rf $OUTPUT && mkdir -p $OUTPUT
 
           # Build SDL3
-          ./External/SDL/build-scripts/androidbuildlibs.sh APP_ABI="armeabi-v7a arm64-v8a x86 x86_64" NDK_LIBS_OUT="$OUTPUT"
+          ./external/SDL/build-scripts/androidbuildlibs.sh APP_ABI="armeabi-v7a arm64-v8a x86 x86_64" NDK_LIBS_OUT="$OUTPUT"
 
       - name: Build SDL3 Android Java
         run: |
@@ -171,7 +171,7 @@ jobs:
           rm -rf $OUTPUT && mkdir -p $OUTPUT
 
           # Build SDL3 Android Java part
-          cd ./External/SDL/android-project/app/src/main/java
+          cd ./external/SDL/android-project/app/src/main/java
           javac -cp $ANDROID_HOME/platforms/$PLATFORM_VER/android.jar -encoding utf8 org/libsdl/app/*.java
           jar cvf $OUTPUT/SDL3AndroidBridge.jar org/libsdl/app/*.class
 
