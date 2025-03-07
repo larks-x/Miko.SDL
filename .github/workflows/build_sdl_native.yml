@@ -70,9 +70,7 @@ jobs:
             -e FLAGS=${{ matrix.platform.flags }}
             -e BUILD_TYPE=${{ env.BUILD_TYPE }}
             --platform ${{ matrix.platform.docker_platform }}
-          run: |
-            cd /workspace
-            ./external/build.sh
+          run: ./external/build.sh
 
       - name: Build
         if: ${{ !contains(matrix.platform.container, 'arm') }}
