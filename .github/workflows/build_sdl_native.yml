@@ -43,7 +43,7 @@ jobs:
         if: contains(matrix.platform.container, 'arm')
         uses: docker/setup-qemu-action@v3
 
-      - name: Prepare release directory (Windows/Linux/OSX)
+      - name: Prepare release directory, (Windows/Linux/OSX)
         run: |
           mkdir -p native/linux-arm
           mkdir -p native/linux-arm64
