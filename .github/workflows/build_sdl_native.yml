@@ -69,7 +69,7 @@ jobs:
           echo $PWD
           cd ./external
           echo $PWD
-          sudo ./build.sh
+          sudo $PWD/build.sh
 
       - name: Get Actions user id
         if: runner.os == 'Linux'
