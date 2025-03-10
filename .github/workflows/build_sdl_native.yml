@@ -56,9 +56,9 @@ jobs:
       - name: Prepare release directory (Windows)    
         if: contains(runner.os, 'win')
         run: |
-            if not exist native\win-arm64 mkdir native\win-arm64
-            if not exist native\win-x64 mkdir native\win-x64
-            if not exist native\win-x86 mkdir native\win-x86
+            if not exist native\win-arm64 (mkdir native\win-arm64)
+            if not exist native\win-x64 (mkdir native\win-x64)
+            if not exist native\win-x86 (mkdir native\win-x86)
 
       - name: Build (Linux ARM)
         if: contains(matrix.platform.container, 'arm')
