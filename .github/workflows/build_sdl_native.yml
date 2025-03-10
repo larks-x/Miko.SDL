@@ -41,14 +41,17 @@ jobs:
         with:
           submodules: true
       
-      - name: Prepare release directory (Windows/Linux/OSX)
+      - name: Prepare release directory (Linux/OSX)
+        if: ${{ !contains(matrix.platform.os.container, 'windows') }}
         run: |
-            mkdir -p native/linux-arm
-            mkdir -p native/linux-arm64
             mkdir -p native/linux-x64
             mkdir -p native/linux-x86
             mkdir -p native/osx-arm64
             mkdir -p native/osx-x64
+            
+      - name: Prepare release directory (Windows)    
+        if: ${{contains(matrix.platform.os.container, 'windows') }}
+        run: |
             mkdir -p native/win-arm64
             mkdir -p native/win-x64
             mkdir -p native/win-x86
