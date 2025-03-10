@@ -221,7 +221,7 @@ jobs:
           for file in native-*.tar
           do
             echo $file
-            tar -xf "$file" -c "src/Miko.SDL/"
+            tar -xf "$file" -C "src/Miko.SDL/"
           done
           rm native-*.tar
 
