@@ -125,7 +125,7 @@ jobs:
           cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist bin/ios/native/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist;
 
       - name: Compress native directory
-        run: tar -cf native-ios.tar native/ios
+        run: tar -cf native-ios.tar bin/ios/native
 
       - name: Upload native artifact
         uses: actions/upload-artifact@v4
