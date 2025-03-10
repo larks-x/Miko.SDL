@@ -1,4 +1,4 @@
-name: Build Native
+name: Build SDL Native
 on:
   workflow_dispatch:
   push:
@@ -44,7 +44,7 @@ jobs:
       - name: Prepare release directory
         shell: bash
         run: |
-              mkdir -p bin/${{ matrix.platform.name }}/native
+              mkdir -p runtimes/${{ matrix.platform.name }}/native
 
       - name: Build (Linux ARM)
         if: contains(matrix.platform.container, 'arm')
@@ -91,7 +91,7 @@ jobs:
           user_id: ${{ steps.get_uid.outputs.uid }}
 
       - name: Compress native directory
-        run:  tar -cf native-${{ matrix.platform.name }}.tar bin/${{ matrix.platform.name }}/native
+        run:  tar -cf native-${{ matrix.platform.name }}.tar runtimes/${{ matrix.platform.name }}/native
 
       - name: Upload native artifact
         uses: actions/upload-artifact@v4
@@ -112,20 +112,20 @@ jobs:
         run: xcodebuild -project external/SDL/Xcode/SDL/SDL.xcodeproj -target SDL3.xcframework -configuration Release
 
       - name: Prepare release directory (iOS)
-        run: mkdir -p bin/ios/native
+        run: mkdir -p runtimes/ios/native
 
       - name: Prepare release (iOS)
         run: |
-          mkdir -p bin/ios/native/SDL3.xcframework/ios-arm64/SDL3.framework;
-          mkdir -p bin/ios/native/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework;
-          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/Info.plist                                           bin/ios/native/SDL3.xcframework/Info.plist;
-          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3                        bin/ios/native/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3;
-          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist                  bin/ios/native/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist;
-          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3       bin/ios/native/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3;
-          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist bin/ios/native/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist;
+          mkdir -p runtimes/ios/native/SDL3.xcframework/ios-arm64/SDL3.framework;
+          mkdir -p runtimes/ios/native/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/Info.plist                                           runtimes/ios/native/SDL3.xcframework/Info.plist;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3                        runtimes/ios/native/SDL3.xcframework/ios-arm64/SDL3.framework/SDL3;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist                  runtimes/ios/native/SDL3.xcframework/ios-arm64/SDL3.framework/Info.plist;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3       runtimes/ios/native/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/SDL3;
+          cp external/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist runtimes/ios/native/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist;
 
       - name: Compress native directory
-        run: tar -cf native-ios.tar bin/ios/native
+        run: tar -cf native-ios.tar runtimes/ios/native
 
       - name: Upload native artifact
         uses: actions/upload-artifact@v4
@@ -145,7 +145,7 @@ jobs:
         with:
           submodules: true
       - name: Prepare release directory (Android)
-        run: mkdir -p bin/android/native
+        run: mkdir -p runtimes/android/native
 
       - name: Setup JDK
         uses: actions/setup-java@v4
@@ -168,7 +168,7 @@ jobs:
       - name: Build (Android)
         run: |
           export PATH=$ANDROID_HOME/ndk/$NDK_VER:$PATH
-          export OUTPUT=$PWD/native/android
+          export OUTPUT=$PWD/runtimes/android/native
           rm -rf $OUTPUT && mkdir -p $OUTPUT
 
           # Build SDL3
@@ -187,7 +187,7 @@ jobs:
           jar cvf $OUTPUT/SDL3AndroidBridge.jar org/libsdl/app/*.class
 
       - name: Compress native directory
-        run: tar -cf native-android.tar bin/android/native
+        run: tar -cf native-android.tar runtimes/android/native
 
       - name: Upload native artifact
         uses: actions/upload-artifact@v4
@@ -221,7 +221,7 @@ jobs:
           for file in native-*.tar
           do
             echo $file
-            tar -xf "$file" -c binnav/
+            tar -xf "$file" -c "src/Miko.SDL/"
           done
           rm native-*.tar
 
