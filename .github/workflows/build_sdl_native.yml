@@ -42,19 +42,19 @@ jobs:
           submodules: true
       
       - name: Prepare release directory (Linux)
-        if: contains(matrix.platform.container, 'linux')
+        if: contains(matrix.platform.name.container, 'linux')
         run: |
             mkdir -p native/linux-x64
             mkdir -p native/linux-x86
 
       - name: Prepare release directory (OSX)
-        if: contains(matrix.platform.container, 'osx')
+        if: contains(matrix.platform.name.container, 'osx')
         run: |
             mkdir -p native/osx-arm64
             mkdir -p native/osx-x64      
 
       - name: Prepare release directory (Windows)    
-        if: contains(matrix.platform.container, 'win')
+        if: contains(matrix.platform.name.container, 'win')
         run: |
             if not exist native\win-arm64 mkdir native\win-arm64
             if not exist native\win-x64 mkdir native\win-x64
