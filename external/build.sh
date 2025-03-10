@@ -71,20 +71,20 @@ if [[ $RUNNER_OS == 'Linux' ]]; then
         libgbm-dev$TARGET_APT_ARCH \
         libpulse-dev$TARGET_APT_ARCH
 
-    if [[ $TARGET_APT_ARCH != :i386 ]]; then
-        # Build libdecor.
-        # This is required so that window decorations can work on wayland.
-        # The support will only be enabled in SDL, but we're not shipping the libdecor binaries
-        # because making them work from a c# app as everything else does (via runtimes) is too difficult.
-        # Also skip i386 because attempting to support this for i386 is a pain.
-        # Special shoutouts to gnome for refusing to support server-side decorations.
-        git clone https://gitlab.freedesktop.org/libdecor/libdecor.git
-        cd libdecor
-        git checkout 0.2.2
-        meson build --buildtype release
-        $SUDO meson install -C build
-        cd ..
-    fi
+    # if [[ $TARGET_APT_ARCH != :i386 ]]; then
+    #     # Build libdecor.
+    #     # This is required so that window decorations can work on wayland.
+    #     # The support will only be enabled in SDL, but we're not shipping the libdecor binaries
+    #     # because making them work from a c# app as everything else does (via runtimes) is too difficult.
+    #     # Also skip i386 because attempting to support this for i386 is a pain.
+    #     # Special shoutouts to gnome for refusing to support server-side decorations.
+    #     git clone https://gitlab.freedesktop.org/libdecor/libdecor.git
+    #     cd libdecor
+    #     git checkout 0.2.2
+    #     meson build --buildtype release
+    #     $SUDO meson install -C build
+    #     cd ..
+    # fi
 fi
 
 # Build SDL
