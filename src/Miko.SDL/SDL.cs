@@ -110,7 +110,7 @@ public static unsafe partial class SDL3
             return nativeLibrary;
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             if (NativeLibrary.TryLoad("SDL3.dll", assembly, searchPath, out nativeLibrary))
             {
@@ -119,14 +119,15 @@ public static unsafe partial class SDL3
         }
         else
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            
+            if (OperatingSystem.IsLinux()|| OperatingSystem.IsAndroid())
             {
                 if (NativeLibrary.TryLoad("libSDL3.so", assembly, searchPath, out nativeLibrary))
                 {
                     return nativeLibrary;
                 }
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            else if (OperatingSystem.IsMacOS()|| OperatingSystem.IsMacCatalyst())
             {
                 if (NativeLibrary.TryLoad("libSDL3.dylib", assembly, searchPath, out nativeLibrary))
                 {
@@ -134,6 +135,13 @@ public static unsafe partial class SDL3
                 }
 
                 if (NativeLibrary.TryLoad("/usr/local/opt/SDL3/lib/libSDL3.dylib", assembly, searchPath, out nativeLibrary))
+                {
+                    return nativeLibrary;
+                }
+            }
+            else if (OperatingSystem.IsIOS())
+            {
+                if (NativeLibrary.TryLoad("SDL3", assembly, searchPath, out nativeLibrary))
                 {
                     return nativeLibrary;
                 }
