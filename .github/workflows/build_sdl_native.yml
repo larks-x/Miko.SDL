@@ -5,12 +5,10 @@ on:
     branches:
       - 'main'
     paths:
-      - CMakeLists.txt
       - external/build.sh
       - .github/workflows/build_sdl_native.yml      
   pull_request:
     paths:
-      - CMakeLists.txt
       - external/build.sh
       - .github/workflows/build_sdl_native.yml
 #  schedule:
