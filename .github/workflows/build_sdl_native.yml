@@ -197,7 +197,10 @@ jobs:
           cp runtimes/android/native/x86_64/libSDL3.so runtimes/android-x64/native/libSDL3.so
           cp runtimes/android/native/x86/libSDL3.so runtimes/android-x86/native/libSDL3.so
           rm -r runtimes/android
-          tar -cf native-android.tar runtimes/android/native
+          tar -cf native-android-arm.tar runtimes/android-arm/native
+          tar -cf native-android-arm64.tar runtimes/android-arm64/native
+          tar -cf native-android-x64.tar runtimes/android-x64/native
+          tar -cf native-android-x86.tar runtimes/android-x86/native
 
       - name: Upload native artifact
         uses: actions/upload-artifact@v4
