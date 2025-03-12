@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net9.0-android</TargetFrameworks>
+    <SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
     <Title>Cross platform .NET bindings for SDL3</Title>
     <RootNamespace>SDL</RootNamespace>
     <WarningsAsErrors>true</WarningsAsErrors>
@@ -12,6 +13,7 @@
   <PropertyGroup>
     <VersionPrefix>3.2.8</VersionPrefix>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +22,7 @@
 
   <ItemGroup>
     <Content Include="runtimes\**" PackagePath="runtimes" Pack="true" />
+    <EmbeddedJar Include="Jars\SDL3AndroidBridge.jar" />
   </ItemGroup>
 
 </Project>
