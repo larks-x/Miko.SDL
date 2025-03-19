@@ -219,29 +219,19 @@ jobs:
           for file in native-*.tar
           do
             echo $file
-            # tar -xf "$file" -C "src/Miko.SDL/"
-            tar -xf "$file" -C "./"
+            tar -xf "$file" -C "src/"
           done
           rm native-*.tar
-          # mkdir -p src/Miko.SDL/runtimes/android-arm/native;
-          # mkdir -p src/Miko.SDL/runtimes/android-arm64/native;
-          # mkdir -p src/Miko.SDL/runtimes/android-x64/native;
-          # mkdir -p src/Miko.SDL/runtimes/android-x86/native;
-          # cp src/Miko.SDL/runtimes/android/native/armeabi-v7a/libSDL3.so src/Miko.SDL/runtimes/android-arm/native/libSDL3.so
-          # cp src/Miko.SDL/runtimes/android/native/arm64-v8a/libSDL3.so src/Miko.SDL/runtimes/android-arm64/native/libSDL3.so
-          # cp src/Miko.SDL/runtimes/android/native/x86_64/libSDL3.so src/Miko.SDL/runtimes/android-x64/native/libSDL3.so
-          # cp src/Miko.SDL/runtimes/android/native/x86/libSDL3.so src/Miko.SDL/runtimes/android-x86/native/libSDL3.so
-          # rm -r src/Miko.SDL/runtimes/android
-          
-          mkdir -p ./runtimes/android-arm/native;
-          mkdir -p ./runtimes/android-arm64/native;
-          mkdir -p ./runtimes/android-x64/native;
-          mkdir -p ./runtimes/android-x86/native;
-          cp ./runtimes/android/native/armeabi-v7a/libSDL3.so ./runtimes/android-arm/native/libSDL3.so
-          cp ./runtimes/android/native/arm64-v8a/libSDL3.so ./runtimes/android-arm64/native/libSDL3.so
-          cp ./runtimes/android/native/x86_64/libSDL3.so ./runtimes/android-x64/native/libSDL3.so
-          cp ./runtimes/android/native/x86/libSDL3.so ./runtimes/android-x86/native/libSDL3.so
-          rm -r ./runtimes/android
+          mkdir -p runtimes;
+          mkdir -p runtimes/android-arm/native;
+          mkdir -p runtimes/android-arm64/native;
+          mkdir -p runtimes/android-x64/native;
+          mkdir -p runtimes/android-x86/native;
+          cp src/runtimes/android/native/armeabi-v7a/libSDL3.so runtimes/android-arm/native/libSDL3.so
+          cp src/runtimes/android/native/arm64-v8a/libSDL3.so runtimes/android-arm64/native/libSDL3.so
+          cp src/runtimes/android/native/x86_64/libSDL3.so runtimes/android-x64/native/libSDL3.so
+          cp src/runtimes/android/native/x86/libSDL3.so runtimes/android-x86/native/libSDL3.so
+          rm -r src/runtimes
 
       - name: Download JAR artifact
         uses: actions/download-artifact@v4
