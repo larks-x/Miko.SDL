@@ -219,7 +219,8 @@ jobs:
           for file in native-*.tar
           do
             echo $file
-            tar -xf "$file" -C "/"
+            # tar -xf "$file" -C "src/"
+            tar -xf "$file"
           done
           rm native-*.tar
           mkdir -p runtimes;
