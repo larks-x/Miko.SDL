@@ -222,11 +222,11 @@ jobs:
             tar -xf "$file" -C "src/"
           done
           rm native-*.tar
-          mkdir -p /runtimes;
-          mkdir -p /runtimes/android-arm/native;
-          mkdir -p /runtimes/android-arm64/native;
-          mkdir -p /runtimes/android-x64/native;
-          mkdir -p /runtimes/android-x86/native;
+          mkdir -p runtimes;
+          mkdir -p runtimes/android-arm/native;
+          mkdir -p runtimes/android-arm64/native;
+          mkdir -p runtimes/android-x64/native;
+          mkdir -p runtimes/android-x86/native;
           cp /src/runtimes/android/native/armeabi-v7a/libSDL3.so /runtimes/android-arm/native/libSDL3.so
           cp /src/runtimes/android/native/arm64-v8a/libSDL3.so /runtimes/android-arm64/native/libSDL3.so
           cp /src/runtimes/android/native/x86_64/libSDL3.so /runtimes/android-x64/native/libSDL3.so
