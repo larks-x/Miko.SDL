@@ -12,7 +12,7 @@
 
   <PropertyGroup>
     <VersionPrefix>3.2.8</VersionPrefix>
-    <VersionSuffix>bate1.0</VersionSuffix>
+    <!--<VersionSuffix>bate1.0</VersionSuffix>-->
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
