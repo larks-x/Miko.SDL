@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net8.0-android;net9.0-android</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net9.0-android</TargetFrameworks>
     <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
     <Title>Cross platform .NET bindings for SDL3</Title>
     <RootNamespace>SDL</RootNamespace>
@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.2.8</VersionPrefix>
+    <VersionPrefix>3.2.8.1</VersionPrefix>
     <!--<VersionSuffix>bate1.0</VersionSuffix>-->
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
