@@ -1735,7 +1735,7 @@ public unsafe partial class SDL3
 	/// The callback can (optionally) call SDL_PutAudioStreamData() to add more<br/>
 	/// audio to the stream during this call; if needed, the request that triggered<br/>
 	/// this callback will obtain the new data immediately.<br/>
-	/// The callback's `approx_request` argument is roughly how many bytes of<br/>
+	/// The callback's `additional_amount` argument is roughly how many bytes of<br/>
 	/// _unconverted_ data (in the stream's input format) is needed by the caller,<br/>
 	/// although this may overestimate a little for safety. This takes into account<br/>
 	/// how much is already in the stream and only asks for any extra necessary to<br/>
@@ -1773,13 +1773,13 @@ public unsafe partial class SDL3
 	/// callback the chance to obtain it immediately.<br/>
 	/// The callback can (optionally) call SDL_GetAudioStreamData() to obtain audio<br/>
 	/// from the stream during this call.<br/>
-	/// The callback's `approx_request` argument is how many bytes of _converted_<br/>
-	/// data (in the stream's output format) was provided by the caller, although<br/>
-	/// this may underestimate a little for safety. This value might be less than<br/>
-	/// what is currently available in the stream, if data was already there, and<br/>
-	/// might be less than the caller provided if the stream needs to keep a buffer<br/>
-	/// to aid in resampling. Which means the callback may be provided with zero<br/>
-	/// bytes, and a different amount on each call.<br/>
+	/// The callback's `additional_amount` argument is how many bytes of<br/>
+	/// _converted_ data (in the stream's output format) was provided by the<br/>
+	/// caller, although this may underestimate a little for safety. This value<br/>
+	/// might be less than what is currently available in the stream, if data was<br/>
+	/// already there, and might be less than the caller provided if the stream<br/>
+	/// needs to keep a buffer to aid in resampling. Which means the callback may<br/>
+	/// be provided with zero bytes, and a different amount on each call.<br/>
 	/// The callback may call SDL_GetAudioStreamAvailable to see the total amount<br/>
 	/// currently available to read from the stream, instead of the total provided<br/>
 	/// by the current call.<br/>
@@ -11414,6 +11414,9 @@ public unsafe partial class SDL3
 	/// until they seem to be stable for a few seconds.<br/>
 	/// It's possible a platform can only report battery percentage or time left<br/>
 	/// but not both.<br/>
+	/// On some platforms, retrieving power supply details might be expensive. If<br/>
+	/// you want to display continuous status you could call this function every<br/>
+	/// minute or so.<br/>
 	/// <br/>
 	/// @param seconds a pointer filled in with the seconds of battery life left,<br/>
 	/// or NULL to ignore. This will be filled in with -1 if we<br/>
@@ -14691,8 +14694,11 @@ public unsafe partial class SDL3
 	/// The allocated memory returned by this function must be freed with<br/>
 	/// SDL_free().<br/>
 	/// If `size` is 0, it will be set to 1.<br/>
-	/// If you want to allocate memory aligned to a specific alignment, consider<br/>
-	/// using SDL_aligned_alloc().<br/>
+	/// If the allocation is successful, the returned pointer is guaranteed to be<br/>
+	/// aligned to either the *fundamental alignment* (`alignof(max_align_t)` in<br/>
+	/// C11 and later) or `2 * sizeof(void *)`, whichever is smaller. Use<br/>
+	/// SDL_aligned_alloc() if you need to allocate memory aligned to an alignment<br/>
+	/// greater than this guarantee.<br/>
 	/// <br/>
 	/// @param size the size to allocate.<br/>
 	/// @returns a pointer to the allocated memory, or NULL if allocation failed.<br/>
@@ -14712,6 +14718,9 @@ public unsafe partial class SDL3
 	/// Allocate a zero-initialized array.<br/>
 	/// The memory returned by this function must be freed with SDL_free().<br/>
 	/// If either of `nmemb` or `size` is 0, they will both be set to 1.<br/>
+	/// If the allocation is successful, the returned pointer is guaranteed to be<br/>
+	/// aligned to either the *fundamental alignment* (`alignof(max_align_t)` in<br/>
+	/// C11 and later) or `2 * sizeof(void *)`, whichever is smaller.<br/>
 	/// <br/>
 	/// @param nmemb the number of elements in the array.<br/>
 	/// @param size the size of each element of the array.<br/>
@@ -14742,6 +14751,10 @@ public unsafe partial class SDL3
 	/// and cannot be dereferenced anymore.<br/>
 	/// - If it returns NULL (indicating failure), then `mem` will remain valid and<br/>
 	/// must still be freed with SDL_free().<br/>
+	/// If the allocation is successfully resized, the returned pointer is<br/>
+	/// guaranteed to be aligned to either the *fundamental alignment*<br/>
+	/// (`alignof(max_align_t)` in C11 and later) or `2 * sizeof(void *)`,<br/>
+	/// whichever is smaller.<br/>
 	/// <br/>
 	/// @param mem a pointer to allocated memory to reallocate, or NULL.<br/>
 	/// @param size the new size of the memory.<br/>
@@ -19836,6 +19849,7 @@ public unsafe partial class SDL3
 	/// @param format the SDL_PixelFormat for the new surface's pixel format.<br/>
 	/// @returns the new SDL_Surface structure that is created or NULL on failure;<br/>
 	/// call SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -19862,6 +19876,7 @@ public unsafe partial class SDL3
 	/// @param pitch the number of bytes between each row, including padding.<br/>
 	/// @returns the new SDL_Surface structure that is created or NULL on failure;<br/>
 	/// call SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -19876,6 +19891,7 @@ public unsafe partial class SDL3
 	/// It is safe to pass NULL to this function.<br/>
 	/// <br/>
 	/// @param surface the SDL_Surface to free.<br/>
+	/// @threadsafety No other thread should be using the surface when it is freed.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -19910,6 +19926,7 @@ public unsafe partial class SDL3
 	/// @param surface the SDL_Surface structure to query.<br/>
 	/// @returns a valid property ID on success or 0 on failure; call<br/>
 	/// SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -19926,6 +19943,7 @@ public unsafe partial class SDL3
 	/// colorspace.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -19943,6 +19961,7 @@ public unsafe partial class SDL3
 	/// @param surface the SDL_Surface structure to query.<br/>
 	/// @returns the colorspace used by the surface, or SDL_COLORSPACE_UNKNOWN if<br/>
 	/// the surface is NULL.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -19969,6 +19988,7 @@ public unsafe partial class SDL3
 	/// @returns a new SDL_Palette structure on success or NULL on failure (e.g. if<br/>
 	/// the surface didn't have an index format); call SDL_GetError() for<br/>
 	/// more information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -19985,6 +20005,7 @@ public unsafe partial class SDL3
 	/// @param palette the SDL_Palette structure to use.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20000,6 +20021,7 @@ public unsafe partial class SDL3
 	/// @param surface the SDL_Surface structure to query.<br/>
 	/// @returns a pointer to the palette used by the surface, or NULL if there is<br/>
 	/// no palette used.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20022,6 +20044,7 @@ public unsafe partial class SDL3
 	/// surface.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20037,6 +20060,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param surface the SDL_Surface structure to query.<br/>
 	/// @returns true if alternate versions are available or false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20061,6 +20085,7 @@ public unsafe partial class SDL3
 	/// @returns a NULL terminated array of SDL_Surface pointers or NULL on<br/>
 	/// failure; call SDL_GetError() for more information. This should be<br/>
 	/// freed with SDL_free() when it is no longer needed.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20077,6 +20102,7 @@ public unsafe partial class SDL3
 	/// destroying them if this is the last reference to them.<br/>
 	/// <br/>
 	/// @param surface the SDL_Surface structure to update.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20100,6 +20126,9 @@ public unsafe partial class SDL3
 	/// @param surface the SDL_Surface structure to be locked.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe. The locking referred to by<br/>
+	/// this function is making the pixels available for direct<br/>
+	/// access, not thread-safe locking.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20113,6 +20142,9 @@ public unsafe partial class SDL3
 	/// Release a surface after directly accessing the pixels.<br/>
 	/// <br/>
 	/// @param surface the SDL_Surface structure to be unlocked.<br/>
+	/// @threadsafety This function is not thread safe. The locking referred to by<br/>
+	/// this function is making the pixels available for direct<br/>
+	/// access, not thread-safe locking.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20131,6 +20163,7 @@ public unsafe partial class SDL3
 	/// in the case of an error.<br/>
 	/// @returns a pointer to a new SDL_Surface structure or NULL on failure; call<br/>
 	/// SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20149,6 +20182,7 @@ public unsafe partial class SDL3
 	/// @param file the BMP file to load.<br/>
 	/// @returns a pointer to a new SDL_Surface structure or NULL on failure; call<br/>
 	/// SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20179,6 +20213,7 @@ public unsafe partial class SDL3
 	/// in the case of an error.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20200,6 +20235,7 @@ public unsafe partial class SDL3
 	/// @param file a file to save to.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20224,6 +20260,7 @@ public unsafe partial class SDL3
 	/// @param enabled true to enable RLE acceleration, false to disable it.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20240,6 +20277,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param surface the SDL_Surface structure to query.<br/>
 	/// @returns true if the surface is RLE enabled, false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20261,6 +20299,7 @@ public unsafe partial class SDL3
 	/// @param key the transparent pixel.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20277,6 +20316,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param surface the SDL_Surface structure to query.<br/>
 	/// @returns true if the surface has a color key, false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20296,6 +20336,7 @@ public unsafe partial class SDL3
 	/// @param key a pointer filled in with the transparent pixel.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20318,6 +20359,7 @@ public unsafe partial class SDL3
 	/// @param b the blue color value multiplied into blit operations.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20336,6 +20378,7 @@ public unsafe partial class SDL3
 	/// @param b a pointer filled in with the current blue color value.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20355,6 +20398,7 @@ public unsafe partial class SDL3
 	/// @param alpha the alpha value multiplied into blit operations.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20371,6 +20415,7 @@ public unsafe partial class SDL3
 	/// @param alpha a pointer filled in with the current alpha value.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20390,6 +20435,7 @@ public unsafe partial class SDL3
 	/// @param blendMode the SDL_BlendMode to use for blit blending.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20405,6 +20451,7 @@ public unsafe partial class SDL3
 	/// @param blendMode a pointer filled in with the current SDL_BlendMode.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20425,6 +20472,7 @@ public unsafe partial class SDL3
 	/// NULL to disable clipping.<br/>
 	/// @returns true if the rectangle intersects the surface, otherwise false and<br/>
 	/// blits will be completely clipped.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20444,6 +20492,7 @@ public unsafe partial class SDL3
 	/// the surface.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20459,6 +20508,7 @@ public unsafe partial class SDL3
 	/// @param flip the direction to flip.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -20474,6 +20524,7 @@ public unsafe partial class SDL3
 	/// @param surface the surface to duplicate.<br/>
 	/// @returns a copy of the surface or NULL on failure; call SDL_GetError() for<br/>
 	/// more information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20493,6 +20544,7 @@ public unsafe partial class SDL3
 	/// @param scaleMode the SDL_ScaleMode to be used.<br/>
 	/// @returns a copy of the surface or NULL on failure; call SDL_GetError() for<br/>
 	/// more information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20516,6 +20568,7 @@ public unsafe partial class SDL3
 	/// @param format the new pixel format.<br/>
 	/// @returns the new SDL_Surface structure that is created or NULL on failure;<br/>
 	/// call SDL_GetError() for more information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20541,6 +20594,7 @@ public unsafe partial class SDL3
 	/// @param props an SDL_PropertiesID with additional color properties, or 0.<br/>
 	/// @returns the new SDL_Surface structure that is created or NULL on failure;<br/>
 	/// call SDL_GetError() for more information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20563,6 +20617,9 @@ public unsafe partial class SDL3
 	/// @param dst_pitch the pitch of the destination pixels, in bytes.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety The same destination pixels should not be used from two<br/>
+	/// threads at once. It is safe to use the same source pixels<br/>
+	/// from multiple threads.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20593,6 +20650,9 @@ public unsafe partial class SDL3
 	/// @param dst_pitch the pitch of the destination pixels, in bytes.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety The same destination pixels should not be used from two<br/>
+	/// threads at once. It is safe to use the same source pixels<br/>
+	/// from multiple threads.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20617,6 +20677,9 @@ public unsafe partial class SDL3
 	/// multiplication, false to do multiplication in sRGB space.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety The same destination pixels should not be used from two<br/>
+	/// threads at once. It is safe to use the same source pixels<br/>
+	/// from multiple threads.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -20632,6 +20695,7 @@ public unsafe partial class SDL3
 	/// multiplication, false to do multiplication in sRGB space.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -20651,6 +20715,7 @@ public unsafe partial class SDL3
 	/// @param a the alpha component of the pixel, normally in the range 0-1.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -20673,6 +20738,7 @@ public unsafe partial class SDL3
 	/// @param color the color to fill with.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20697,6 +20763,7 @@ public unsafe partial class SDL3
 	/// @param color the color to fill with.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20763,9 +20830,8 @@ public unsafe partial class SDL3
 	/// SDL_BlitSurfaceScaled().<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
-	/// @threadsafety The same destination surface should not be used from two<br/>
-	/// threads at once. It is safe to use the same source surface<br/>
-	/// from multiple threads.<br/>
+	/// @threadsafety Only one thread should be using the `src` and `dst` surfaces<br/>
+	/// at any given time.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20787,9 +20853,8 @@ public unsafe partial class SDL3
 	/// the destination surface, may not be NULL.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
-	/// @threadsafety The same destination surface should not be used from two<br/>
-	/// threads at once. It is safe to use the same source surface<br/>
-	/// from multiple threads.<br/>
+	/// @threadsafety Only one thread should be using the `src` and `dst` surfaces<br/>
+	/// at any given time.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20812,9 +20877,8 @@ public unsafe partial class SDL3
 	/// @param scaleMode the SDL_ScaleMode to be used.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
-	/// @threadsafety The same destination surface should not be used from two<br/>
-	/// threads at once. It is safe to use the same source surface<br/>
-	/// from multiple threads.<br/>
+	/// @threadsafety Only one thread should be using the `src` and `dst` surfaces<br/>
+	/// at any given time.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20837,9 +20901,8 @@ public unsafe partial class SDL3
 	/// @param scaleMode the SDL_ScaleMode to be used.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
-	/// @threadsafety The same destination surface should not be used from two<br/>
-	/// threads at once. It is safe to use the same source surface<br/>
-	/// from multiple threads.<br/>
+	/// @threadsafety Only one thread should be using the `src` and `dst` surfaces<br/>
+	/// at any given time.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20860,9 +20923,8 @@ public unsafe partial class SDL3
 	/// @param scaleMode the SDL_ScaleMode to be used.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
-	/// @threadsafety The same destination surface should not be used from two<br/>
-	/// threads at once. It is safe to use the same source surface<br/>
-	/// from multiple threads.<br/>
+	/// @threadsafety Only one thread should be using the `src` and `dst` surfaces<br/>
+	/// at any given time.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.4.0.<br/>
 	/// <br/>
@@ -20885,9 +20947,8 @@ public unsafe partial class SDL3
 	/// the destination surface, or NULL to fill the entire surface.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
-	/// @threadsafety The same destination surface should not be used from two<br/>
-	/// threads at once. It is safe to use the same source surface<br/>
-	/// from multiple threads.<br/>
+	/// @threadsafety Only one thread should be using the `src` and `dst` surfaces<br/>
+	/// at any given time.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20914,9 +20975,8 @@ public unsafe partial class SDL3
 	/// the destination surface, or NULL to fill the entire surface.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
-	/// @threadsafety The same destination surface should not be used from two<br/>
-	/// threads at once. It is safe to use the same source surface<br/>
-	/// from multiple threads.<br/>
+	/// @threadsafety Only one thread should be using the `src` and `dst` surfaces<br/>
+	/// at any given time.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20950,9 +21010,8 @@ public unsafe partial class SDL3
 	/// the destination surface, or NULL to fill the entire surface.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
-	/// @threadsafety The same destination surface should not be used from two<br/>
-	/// threads at once. It is safe to use the same source surface<br/>
-	/// from multiple threads.<br/>
+	/// @threadsafety Only one thread should be using the `src` and `dst` surfaces<br/>
+	/// at any given time.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20980,6 +21039,7 @@ public unsafe partial class SDL3
 	/// @param g the green component of the pixel in the range 0-255.<br/>
 	/// @param b the blue component of the pixel in the range 0-255.<br/>
 	/// @returns a pixel value.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -21008,6 +21068,7 @@ public unsafe partial class SDL3
 	/// @param b the blue component of the pixel in the range 0-255.<br/>
 	/// @param a the alpha component of the pixel in the range 0-255.<br/>
 	/// @returns a pixel value.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -21044,6 +21105,7 @@ public unsafe partial class SDL3
 	/// ignore this channel.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -21076,6 +21138,7 @@ public unsafe partial class SDL3
 	/// 0-1, or NULL to ignore this channel.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -21106,6 +21169,7 @@ public unsafe partial class SDL3
 	/// @param a the alpha channel value, 0-255.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -21134,6 +21198,7 @@ public unsafe partial class SDL3
 	/// @param a the alpha channel value, normally in the range 0-1.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -26784,7 +26849,7 @@ public unsafe partial class SDL3
 	/// @param device a GPU context.<br/>
 	/// @param format the texture format to check.<br/>
 	/// @param sample_count the sample count to check.<br/>
-	/// @returns a hardware-specific version of min(preferred, possible).<br/>
+	/// @returns whether the sample count is supported for this texture format.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>

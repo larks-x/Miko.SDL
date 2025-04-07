@@ -4068,6 +4068,8 @@ public enum SDL_DUMMY_ENUM
 /// </summary>
 public enum SDL_ScaleMode
 {
+	/// <unmanaged>SDL_SCALEMODE_INVALID</unmanaged>
+	Invalid = -1,
 	/// <summary>
 	/// nearest pixel sampling
 	/// </summary>

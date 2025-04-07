@@ -236,6 +236,7 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_PREFER_LIBDECOR => "SDL_VIDEO_WAYLAND_PREFER_LIBDECOR"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_SCALE_TO_DISPLAY => "SDL_VIDEO_WAYLAND_SCALE_TO_DISPLAY"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WIN_D3DCOMPILER => "SDL_VIDEO_WIN_D3DCOMPILER"u8;
+	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_EXTERNAL_WINDOW_INPUT => "SDL_VIDEO_X11_EXTERNAL_WINDOW_INPUT"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR => "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_NET_WM_PING => "SDL_VIDEO_X11_NET_WM_PING"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_NODIRECTCOLOR => "SDL_VIDEO_X11_NODIRECTCOLOR"u8;
@@ -734,7 +735,7 @@ public static partial class SDL3
 	public const uint SDL_NS_PER_US = 1000;
 	public const int SDL_MAJOR_VERSION = 3;
 	public const int SDL_MINOR_VERSION = 2;
-	public const int SDL_MICRO_VERSION = 8;
+	public const int SDL_MICRO_VERSION = 10;
 	public static ReadOnlySpan<byte> SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER => "SDL.video.wayland.wl_display"u8;
 	public const ulong SDL_WINDOW_FULLSCREEN = 0x0000000000000001;
 	public const ulong SDL_WINDOW_OPENGL = 0x0000000000000002;
@@ -1728,6 +1729,7 @@ public static partial class SDL3
 	public const SDL_SensorType SDL_SENSOR_ACCEL_R = SDL_SensorType.AccelR;
 	public const SDL_SensorType SDL_SENSOR_GYRO_R = SDL_SensorType.GyroR;
 	public const SDL_DUMMY_ENUM DUMMY_ENUM_VALUE = SDL_DUMMY_ENUM.DUMMY_ENUM_VALUE;
+	public const SDL_ScaleMode SDL_SCALEMODE_INVALID = SDL_ScaleMode.Invalid;
 	public const SDL_ScaleMode SDL_SCALEMODE_NEAREST = SDL_ScaleMode.Nearest;
 	public const SDL_ScaleMode SDL_SCALEMODE_LINEAR = SDL_ScaleMode.Linear;
 	public const SDL_FlipMode SDL_FLIP_NONE = SDL_FlipMode.None;
