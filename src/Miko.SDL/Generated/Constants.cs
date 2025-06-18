@@ -735,7 +735,7 @@ public static partial class SDL3
 	public const uint SDL_NS_PER_US = 1000;
 	public const int SDL_MAJOR_VERSION = 3;
 	public const int SDL_MINOR_VERSION = 2;
-	public const int SDL_MICRO_VERSION = 10;
+	public const int SDL_MICRO_VERSION = 16;
 	public static ReadOnlySpan<byte> SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER => "SDL.video.wayland.wl_display"u8;
 	public const ulong SDL_WINDOW_FULLSCREEN = 0x0000000000000001;
 	public const ulong SDL_WINDOW_OPENGL = 0x0000000000000002;
@@ -891,7 +891,7 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_B_FLOAT => "SDL.gpu.texture.create.d3d12.clear.b"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_A_FLOAT => "SDL.gpu.texture.create.d3d12.clear.a"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_DEPTH_FLOAT => "SDL.gpu.texture.create.d3d12.clear.depth"u8;
-	public static ReadOnlySpan<byte> SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_STENCIL_UINT8 => "SDL.gpu.texture.create.d3d12.clear.stencil"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_STENCIL_NUMBER => "SDL.gpu.texture.create.d3d12.clear.stencil"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_TEXTURE_CREATE_NAME_STRING => "SDL.gpu.texture.create.name"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_BUFFER_CREATE_NAME_STRING => "SDL.gpu.buffer.create.name"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_TRANSFERBUFFER_CREATE_NAME_STRING => "SDL.gpu.transferbuffer.create.name"u8;

@@ -45,10 +45,14 @@ public enum SDL_WindowFlags : ulong
     MouseFocus = SDL_WINDOW_MOUSE_FOCUS,
     /// <unmanaged>SDL_WINDOW_EXTERNAL</unmanaged>
     External = SDL_WINDOW_EXTERNAL,
+    /// <unmanaged>SDL_WINDOW_MODAL</unmanaged>
+    Modal = SDL_WINDOW_MODAL,
     /// <unmanaged>SDL_WINDOW_HIGH_PIXEL_DENSITY</unmanaged>
     HighPixelDensity = SDL_WINDOW_HIGH_PIXEL_DENSITY,
     /// <unmanaged>SDL_WINDOW_MOUSE_CAPTURE</unmanaged>
     MouseCapture = SDL_WINDOW_MOUSE_CAPTURE,
+    /// <unmanaged>SDL_WINDOW_MOUSE_RELATIVE_MODE</unmanaged>
+    MouseRelativeMode = SDL_WINDOW_MOUSE_RELATIVE_MODE,
     /// <unmanaged>SDL_WINDOW_ALWAYS_ON_TOP</unmanaged>
     AlwaysOnTop = SDL_WINDOW_ALWAYS_ON_TOP,
     /// <unmanaged>SDL_WINDOW_UTILITY</unmanaged>

@@ -2054,7 +2054,7 @@ public enum SDL_PackedLayout
 /// ABGR32, define a platform-independent encoding into bytes in the order<br/>
 /// specified. For example, in RGB24 data, each pixel is encoded in 3 bytes<br/>
 /// (red, green, blue) in that order, and in ABGR32 data, each pixel is<br/>
-/// encoded in 4 bytes alpha, blue, green, red) in that order. Use these<br/>
+/// encoded in 4 bytes (alpha, blue, green, red) in that order. Use these<br/>
 /// names if the property of a format that is important to you is the order<br/>
 /// of the bytes in memory or on disk.<br/>
 /// - Names with a bit count per component, such as ARGB8888 and XRGB1555, are<br/>
@@ -4333,22 +4333,22 @@ public enum SDL_FlashOperation
 public enum SDL_GLAttr
 {
 	/// <summary>
-	/// the minimum number of bits for the red channel of the color buffer; defaults to 3.
+	/// the minimum number of bits for the red channel of the color buffer; defaults to 8.
 	/// </summary>
 	/// <unmanaged>SDL_GL_RED_SIZE</unmanaged>
 	RedSize = 0,
 	/// <summary>
-	/// the minimum number of bits for the green channel of the color buffer; defaults to 3.
+	/// the minimum number of bits for the green channel of the color buffer; defaults to 8.
 	/// </summary>
 	/// <unmanaged>SDL_GL_GREEN_SIZE</unmanaged>
 	GreenSize = 1,
 	/// <summary>
-	/// the minimum number of bits for the blue channel of the color buffer; defaults to 2.
+	/// the minimum number of bits for the blue channel of the color buffer; defaults to 8.
 	/// </summary>
 	/// <unmanaged>SDL_GL_BLUE_SIZE</unmanaged>
 	BlueSize = 2,
 	/// <summary>
-	/// the minimum number of bits for the alpha channel of the color buffer; defaults to 0.
+	/// the minimum number of bits for the alpha channel of the color buffer; defaults to 8.
 	/// </summary>
 	/// <unmanaged>SDL_GL_ALPHA_SIZE</unmanaged>
 	AlphaSize = 3,

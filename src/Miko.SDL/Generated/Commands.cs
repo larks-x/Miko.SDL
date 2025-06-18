@@ -13536,8 +13536,7 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Return whether an explicit rectangle was set as the viewport.<br/>
 	/// This is useful if you're saving and restoring the viewport and want to know<br/>
-	/// whether you should restore a specific rectangle or NULL. Note that the<br/>
-	/// viewport is always reset when changing rendering targets.<br/>
+	/// whether you should restore a specific rectangle or NULL.<br/>
 	/// Each render target has its own viewport. This function checks the viewport<br/>
 	/// for the current render target.<br/>
 	/// <br/>
@@ -17977,11 +17976,11 @@ public unsafe partial class SDL3
 	/// = y<br/>
 	/// <<br/>
 	/// = INF`<br/>
-	/// Range: `-Pi/2<br/>
+	/// Range: `-Pi<br/>
 	/// <<br/>
 	/// = y<br/>
 	/// <<br/>
-	/// = Pi/2`<br/>
+	/// = Pi`<br/>
 	/// This function operates on double-precision floating point values, use<br/>
 	/// SDL_atan2f for single-precision floats.<br/>
 	/// To calculate the arc tangent of a single value, use SDL_atan.<br/>
@@ -18019,11 +18018,11 @@ public unsafe partial class SDL3
 	/// = y<br/>
 	/// <<br/>
 	/// = INF`<br/>
-	/// Range: `-Pi/2<br/>
+	/// Range: `-Pi<br/>
 	/// <<br/>
 	/// = y<br/>
 	/// <<br/>
-	/// = Pi/2`<br/>
+	/// = Pi`<br/>
 	/// This function operates on single-precision floating point values, use<br/>
 	/// SDL_atan2 for double-precision floats.<br/>
 	/// To calculate the arc tangent of a single value, use SDL_atanf.<br/>
@@ -20777,8 +20776,6 @@ public unsafe partial class SDL3
 	/// with clipping.<br/>
 	/// If either `srcrect` or `dstrect` are NULL, the entire surface (`src` or<br/>
 	/// `dst`) is copied while ensuring clipping to `dst->clip_rect`.<br/>
-	/// The final blit rectangles are saved in `srcrect` and `dstrect` after all<br/>
-	/// clipping is performed.<br/>
 	/// The blit function should not be called on a locked surface.<br/>
 	/// The blit semantics for surfaces with and without blending and colorkey are<br/>
 	/// defined as follows:<br/>
@@ -20916,10 +20913,11 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param src the SDL_Surface structure to be copied from.<br/>
 	/// @param srcrect the SDL_Rect structure representing the rectangle to be<br/>
-	/// copied, may not be NULL.<br/>
+	/// copied, or NULL to copy the entire surface.<br/>
 	/// @param dst the SDL_Surface structure that is the blit target.<br/>
 	/// @param dstrect the SDL_Rect structure representing the target rectangle in<br/>
-	/// the destination surface, may not be NULL.<br/>
+	/// the destination surface, or NULL to fill the entire<br/>
+	/// destination surface.<br/>
 	/// @param scaleMode the SDL_ScaleMode to be used.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
@@ -22386,6 +22384,9 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Create a window with the specified dimensions and flags.<br/>
+	/// The window size is a request and may be different than expected based on<br/>
+	/// the desktop layout and window manager policies. Your application should be<br/>
+	/// prepared to handle a window of any size.<br/>
 	/// `flags` may be any of the following OR'd together:<br/>
 	/// - `SDL_WINDOW_FULLSCREEN`: fullscreen window at desktop resolution<br/>
 	/// - `SDL_WINDOW_OPENGL`: window usable with an OpenGL context<br/>
@@ -22468,6 +22469,9 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Create a child popup window of the specified parent window.<br/>
+	/// The window size is a request and may be different than expected based on<br/>
+	/// the desktop layout and window manager policies. Your application should be<br/>
+	/// prepared to handle a window of any size.<br/>
 	/// The flags parameter **must** contain at least one of the following:<br/>
 	/// - `SDL_WINDOW_TOOLTIP`: The popup window is a tooltip and will not pass any<br/>
 	/// input events.<br/>
@@ -22520,6 +22524,9 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Create a window with the specified properties.<br/>
+	/// The window size is a request and may be different than expected based on<br/>
+	/// the desktop layout and window manager policies. Your application should be<br/>
+	/// prepared to handle a window of any size.<br/>
 	/// These are the supported properties:<br/>
 	/// - `SDL_PROP_WINDOW_CREATE_ALWAYS_ON_TOP_BOOLEAN`: true if the window should<br/>
 	/// be always on top<br/>
@@ -25433,9 +25440,9 @@ public unsafe partial class SDL3
 	/// - `SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_DEPTH_FLOAT`: (Direct3D 12 only)<br/>
 	/// if the texture usage is SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET, clear<br/>
 	/// the texture to a depth of this value. Defaults to zero.<br/>
-	/// - `SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_STENCIL_UINT8`: (Direct3D 12<br/>
+	/// - `SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_STENCIL_NUMBER`: (Direct3D 12<br/>
 	/// only) if the texture usage is SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET,<br/>
-	/// clear the texture to a stencil of this value. Defaults to zero.<br/>
+	/// clear the texture to a stencil of this Uint8 value. Defaults to zero.<br/>
 	/// - `SDL_PROP_GPU_TEXTURE_CREATE_NAME_STRING`: a name that can be displayed<br/>
 	/// in debugging tools.<br/>
 	/// <br/>
@@ -26530,7 +26537,7 @@ public unsafe partial class SDL3
 	/// composition are unsupported by the device. Check if the parameters are<br/>
 	/// supported via SDL_WindowSupportsGPUPresentMode /<br/>
 	/// SDL_WindowSupportsGPUSwapchainComposition prior to calling this function.<br/>
-	/// SDL_GPU_PRESENTMODE_VSYNC and SDL_GPU_SWAPCHAINCOMPOSITION_SDR are always<br/>
+	/// SDL_GPU_PRESENTMODE_VSYNC with SDL_GPU_SWAPCHAINCOMPOSITION_SDR are always<br/>
 	/// supported.<br/>
 	/// <br/>
 	/// @param device a GPU context.<br/>

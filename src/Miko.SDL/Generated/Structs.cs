@@ -623,6 +623,14 @@ public partial struct SDL_MouseWheelEvent
 	/// Y coordinate, relative to window
 	/// </summary>
 	public float mouse_y;
+	/// <summary>
+	/// The amount scrolled horizontally, accumulated to whole scroll "ticks" (added in 3.2.12)
+	/// </summary>
+	public int integer_x;
+	/// <summary>
+	/// The amount scrolled vertically, accumulated to whole scroll "ticks" (added in 3.2.12)
+	/// </summary>
+	public int integer_y;
 }
 
 /// <summary>
