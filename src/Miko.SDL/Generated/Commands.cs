@@ -1142,7 +1142,7 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Query an audio stream for its currently-bound device.<br/>
-	/// This reports the audio device that an audio stream is currently bound to.<br/>
+	/// This reports the logical audio device that an audio stream is currently bound to.<br/>
 	/// If not bound, or invalid, this returns zero, which is not a valid device<br/>
 	/// ID.<br/>
 	/// <br/>
@@ -22495,6 +22495,13 @@ public unsafe partial class SDL3
 	/// the mouse and/or keyboard. Attempts to do so will fail.<br/>
 	/// Popup windows implicitly do not have a border/decorations and do not appear<br/>
 	/// on the taskbar/dock or in lists of windows such as alt-tab menus.<br/>
+	/// By default, popup window positions will automatically be constrained to keep<br/>
+	/// the entire window within display bounds. This can be overridden with the<br/>
+	/// `SDL_PROP_WINDOW_CREATE_CONSTRAIN_POPUP_BOOLEAN` property.<br/>
+	/// By default, popup menus will automatically grab keyboard focus from the parent<br/>
+	/// when shown. This behavior can be overridden by setting the `SDL_WINDOW_NOT_FOCUSABLE`<br/>
+	/// flag, setting the `SDL_PROP_WINDOW_CREATE_FOCUSABLE_BOOLEAN` property to false, or<br/>
+	/// toggling it after creation via the `SDL_SetWindowFocusable()` function.<br/>
 	/// If a parent window is hidden or destroyed, any child popup windows will be<br/>
 	/// recursively hidden or destroyed as well. Child popup windows not explicitly<br/>
 	/// hidden will be restored when the parent is shown.<br/>
@@ -22532,6 +22539,9 @@ public unsafe partial class SDL3
 	/// be always on top<br/>
 	/// - `SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN`: true if the window has no<br/>
 	/// window decoration<br/>
+	/// - `SDL_PROP_WINDOW_CREATE_CONSTRAIN_POPUP_BOOLEAN`: true if the "tooltip" and<br/>
+	/// "menu" window types should be automatically constrained to be entirely within<br/>
+	/// display bounds (default), false if no constraints on the position are desired.<br/>
 	/// - `SDL_PROP_WINDOW_CREATE_EXTERNAL_GRAPHICS_CONTEXT_BOOLEAN`: true if the<br/>
 	/// window will be used with an externally managed graphics context.<br/>
 	/// - `SDL_PROP_WINDOW_CREATE_FOCUSABLE_BOOLEAN`: true if the window should<br/>
