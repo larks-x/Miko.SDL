@@ -3445,7 +3445,7 @@ public enum SDL_Scancode
 	/// <summary>
 	/// This is the additional key that ISO<br/>
 	/// keyboards have over ANSI ones,<br/>
-	/// located between left shift and Y.<br/>
+	/// located between left shift and Z.<br/>
 	/// Produces GRAVE ACCENT and TILDE in a<br/>
 	/// US or UK Mac layout, REVERSE SOLIDUS<br/>
 	/// (backslash) and VERTICAL LINE in a<br/>

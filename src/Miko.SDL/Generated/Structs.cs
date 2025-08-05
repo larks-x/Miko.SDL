@@ -3915,7 +3915,7 @@ public partial struct SDL_GPUVertexBufferDescription
 	/// </summary>
 	public uint slot;
 	/// <summary>
-	/// The byte pitch between consecutive elements of the vertex buffer.
+	/// The size of a single element + the offset between elements.
 	/// </summary>
 	public uint pitch;
 	/// <summary>

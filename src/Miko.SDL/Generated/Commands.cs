@@ -1064,7 +1064,10 @@ public unsafe partial class SDL3
 	/// Binding a stream to a device will set its output format for playback<br/>
 	/// devices, and its input format for recording devices, so they match the<br/>
 	/// device's settings. The caller is welcome to change the other end of the<br/>
-	/// stream's format at any time with SDL_SetAudioStreamFormat().<br/>
+	/// stream's format at any time with SDL_SetAudioStreamFormat(). If the other<br/>
+	/// end of the stream's format has never been set (the audio stream was created<br/>
+	/// with a NULL audio spec), this function will set it to match the device<br/>
+	/// end's format.<br/>
 	/// <br/>
 	/// @param devid an audio device to bind a stream to.<br/>
 	/// @param streams an array of audio streams to bind.<br/>
@@ -2593,7 +2596,7 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Get UTF-8 text from the clipboard.<br/>
-	/// This functions returns an empty string if there was not enough memory left<br/>
+	/// This function returns an empty string if there is not enough memory left<br/>
 	/// for a copy of the clipboard's content.<br/>
 	/// <br/>
 	/// @returns the clipboard text on success or an empty string on failure; call<br/>
@@ -2655,7 +2658,7 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Get UTF-8 text from the primary selection.<br/>
-	/// This functions returns an empty string if there was not enough memory left<br/>
+	/// This function returns an empty string if there is not enough memory left<br/>
 	/// for a copy of the primary selection's content.<br/>
 	/// <br/>
 	/// @returns the primary selection text on success or an empty string on<br/>
@@ -2701,7 +2704,7 @@ public unsafe partial class SDL3
 	/// data the callback function will be called, allowing it to generate and<br/>
 	/// respond with the data for the requested mime-type.<br/>
 	/// The size of text data does not include any terminator, and the text does<br/>
-	/// not need to be null terminated (e.g. you can directly copy a portion of a<br/>
+	/// not need to be null-terminated (e.g., you can directly copy a portion of a<br/>
 	/// document).<br/>
 	/// <br/>
 	/// @param callback a function pointer to the function that provides the<br/>
@@ -2709,7 +2712,7 @@ public unsafe partial class SDL3
 	/// @param cleanup a function pointer to the function that cleans up the<br/>
 	/// clipboard data.<br/>
 	/// @param userdata an opaque pointer that will be forwarded to the callbacks.<br/>
-	/// @param mime_types a list of mime-types that are being offered.<br/>
+	/// @param mime_types a list of mime-types that are being offered. SDL copies the given list.<br/>
 	/// @param num_mime_types the number of mime-types in the mime_types list.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
@@ -2739,9 +2742,9 @@ public unsafe partial class SDL3
 	public static partial SDLBool SDL_ClearClipboardData();
 
 	/// <summary>
-	/// Get the data from clipboard for a given mime type.<br/>
+	/// Get the data from the clipboard for a given mime type.<br/>
 	/// The size of text data does not include the terminator, but the text is<br/>
-	/// guaranteed to be null terminated.<br/>
+	/// guaranteed to be null-terminated.<br/>
 	/// <br/>
 	/// @param mime_type the mime type to read from the clipboard.<br/>
 	/// @param size a pointer filled in with the length of the returned data.<br/>
@@ -2767,8 +2770,8 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Query whether there is data in the clipboard for the provided mime type.<br/>
 	/// <br/>
-	/// @param mime_type the mime type to check for data for.<br/>
-	/// @returns true if there exists data in clipboard for the provided mime type,<br/>
+	/// @param mime_type the mime type to check for data.<br/>
+	/// @returns true if data exists in the clipboard for the provided mime type,<br/>
 	/// false if it does not.<br/>
 	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
@@ -2791,7 +2794,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param num_mime_types a pointer filled with the number of mime types, may<br/>
 	/// be NULL.<br/>
-	/// @returns a null terminated array of strings with mime types, or NULL on<br/>
+	/// @returns a null-terminated array of strings with mime types, or NULL on<br/>
 	/// failure; call SDL_GetError() for more information. This should be<br/>
 	/// freed with SDL_free() when it is no longer needed.<br/>
 	/// @threadsafety This function should only be called on the main thread.<br/>
