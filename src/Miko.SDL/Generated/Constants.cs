@@ -735,7 +735,7 @@ public static partial class SDL3
 	public const uint SDL_NS_PER_US = 1000;
 	public const int SDL_MAJOR_VERSION = 3;
 	public const int SDL_MINOR_VERSION = 2;
-	public const int SDL_MICRO_VERSION = 20;
+	public const int SDL_MICRO_VERSION = 22;
 	public static ReadOnlySpan<byte> SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER => "SDL.video.wayland.wl_display"u8;
 	public const ulong SDL_WINDOW_FULLSCREEN = 0x0000000000000001;
 	public const ulong SDL_WINDOW_OPENGL = 0x0000000000000002;
@@ -1729,6 +1729,7 @@ public static partial class SDL3
 	public const SDL_SensorType SDL_SENSOR_GYRO_L = SDL_SensorType.GyroL;
 	public const SDL_SensorType SDL_SENSOR_ACCEL_R = SDL_SensorType.AccelR;
 	public const SDL_SensorType SDL_SENSOR_GYRO_R = SDL_SensorType.GyroR;
+	public const SDL_SensorType SDL_SENSOR_COUNT = SDL_SensorType.Count;
 	public const SDL_DUMMY_ENUM DUMMY_ENUM_VALUE = SDL_DUMMY_ENUM.DUMMY_ENUM_VALUE;
 	public const SDL_ScaleMode SDL_SCALEMODE_INVALID = SDL_ScaleMode.Invalid;
 	public const SDL_ScaleMode SDL_SCALEMODE_NEAREST = SDL_ScaleMode.Nearest;

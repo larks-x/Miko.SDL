@@ -14480,7 +14480,7 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Draw debug text to an SDL_Renderer.<br/>
 	/// This function will render a printf()-style format string to a renderer.<br/>
-	/// Note that this is a convinence function for debugging, with severe<br/>
+	/// Note that this is a convenience function for debugging, with severe<br/>
 	/// limitations, and is not intended to be used for production apps and games.<br/>
 	/// For the full list of limitations and other useful information, see<br/>
 	/// SDL_RenderDebugText.<br/>
@@ -16639,7 +16639,7 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Convert an integer into a string.<br/>
 	/// This requires a radix to specified for string format. Specifying 10<br/>
-	/// produces a decimal number, 16 hexidecimal, etc. Must be in the range of 2<br/>
+	/// produces a decimal number, 16 hexadecimal, etc. Must be in the range of 2<br/>
 	/// to 36.<br/>
 	/// Note that this function will overflow a buffer if `str` is not large enough<br/>
 	/// to hold the output! It may be safer to use SDL_snprintf to clamp output, or<br/>
@@ -16679,7 +16679,7 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Convert an unsigned integer into a string.<br/>
 	/// This requires a radix to specified for string format. Specifying 10<br/>
-	/// produces a decimal number, 16 hexidecimal, etc. Must be in the range of 2<br/>
+	/// produces a decimal number, 16 hexadecimal, etc. Must be in the range of 2<br/>
 	/// to 36.<br/>
 	/// Note that this function will overflow a buffer if `str` is not large enough<br/>
 	/// to hold the output! It may be safer to use SDL_snprintf to clamp output, or<br/>
@@ -16719,7 +16719,7 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Convert a long integer into a string.<br/>
 	/// This requires a radix to specified for string format. Specifying 10<br/>
-	/// produces a decimal number, 16 hexidecimal, etc. Must be in the range of 2<br/>
+	/// produces a decimal number, 16 hexadecimal, etc. Must be in the range of 2<br/>
 	/// to 36.<br/>
 	/// Note that this function will overflow a buffer if `str` is not large enough<br/>
 	/// to hold the output! It may be safer to use SDL_snprintf to clamp output, or<br/>
@@ -16759,7 +16759,7 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Convert an unsigned long integer into a string.<br/>
 	/// This requires a radix to specified for string format. Specifying 10<br/>
-	/// produces a decimal number, 16 hexidecimal, etc. Must be in the range of 2<br/>
+	/// produces a decimal number, 16 hexadecimal, etc. Must be in the range of 2<br/>
 	/// to 36.<br/>
 	/// Note that this function will overflow a buffer if `str` is not large enough<br/>
 	/// to hold the output! It may be safer to use SDL_snprintf to clamp output, or<br/>
@@ -16799,7 +16799,7 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Convert a long long integer into a string.<br/>
 	/// This requires a radix to specified for string format. Specifying 10<br/>
-	/// produces a decimal number, 16 hexidecimal, etc. Must be in the range of 2<br/>
+	/// produces a decimal number, 16 hexadecimal, etc. Must be in the range of 2<br/>
 	/// to 36.<br/>
 	/// Note that this function will overflow a buffer if `str` is not large enough<br/>
 	/// to hold the output! It may be safer to use SDL_snprintf to clamp output, or<br/>
@@ -16839,7 +16839,7 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Convert an unsigned long long integer into a string.<br/>
 	/// This requires a radix to specified for string format. Specifying 10<br/>
-	/// produces a decimal number, 16 hexidecimal, etc. Must be in the range of 2<br/>
+	/// produces a decimal number, 16 hexadecimal, etc. Must be in the range of 2<br/>
 	/// to 36.<br/>
 	/// Note that this function will overflow a buffer if `str` is not large enough<br/>
 	/// to hold the output! It may be safer to use SDL_snprintf to clamp output, or<br/>
@@ -17246,7 +17246,7 @@ public unsafe partial class SDL3
 	public static partial int SDL_strncasecmp([global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> str1, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> str2, nuint maxlen);
 
 	/// <summary>
-	/// Searches a string for the first occurence of any character contained in a<br/>
+	/// Searches a string for the first occurrence of any character contained in a<br/>
 	/// breakset, and returns a pointer from the string to that character.<br/>
 	/// <br/>
 	/// @param str The null-terminated string to be searched. Must not be NULL, and<br/>
@@ -17254,7 +17254,7 @@ public unsafe partial class SDL3
 	/// @param breakset A null-terminated string containing the list of characters<br/>
 	/// to look for. Must not be NULL, and must not overlap with<br/>
 	/// `str`.<br/>
-	/// @returns A pointer to the location, in str, of the first occurence of a<br/>
+	/// @returns A pointer to the location, in str, of the first occurrence of a<br/>
 	/// character present in the breakset, or NULL if none is found.<br/>
 	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
@@ -19298,7 +19298,7 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// This function converts text between encodings, reading from and writing to<br/>
 	/// a buffer.<br/>
-	/// It returns the number of succesful conversions on success. On error,<br/>
+	/// It returns the number of successful conversions on success. On error,<br/>
 	/// SDL_ICONV_E2BIG is returned when the output buffer is too small, or<br/>
 	/// SDL_ICONV_EILSEQ is returned when an invalid input sequence is encountered,<br/>
 	/// or SDL_ICONV_EINVAL is returned when an incomplete input sequence is<br/>
@@ -22740,7 +22740,7 @@ public unsafe partial class SDL3
 	/// - `SDL_PROP_WINDOW_COCOA_WINDOW_POINTER`: the `(__unsafe_unretained)`<br/>
 	/// NSWindow associated with the window<br/>
 	/// - `SDL_PROP_WINDOW_COCOA_METAL_VIEW_TAG_NUMBER`: the NSInteger tag<br/>
-	/// assocated with metal views on the window<br/>
+	/// associated with metal views on the window<br/>
 	/// On OpenVR:<br/>
 	/// - `SDL_PROP_WINDOW_OPENVR_OVERLAY_ID`: the OpenVR Overlay Handle ID for the<br/>
 	/// associated overlay window.<br/>
@@ -25616,7 +25616,7 @@ public unsafe partial class SDL3
 	public static partial void SDL_InsertGPUDebugLabel(SDL_GPUCommandBuffer command_buffer, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> text);
 
 	/// <summary>
-	/// Begins a debug group with an arbitary name.<br/>
+	/// Begins a debug group with an arbitrary name.<br/>
 	/// Used for denoting groups of calls when viewing the command buffer<br/>
 	/// callstream in a graphics debugging tool.<br/>
 	/// Each call to SDL_PushGPUDebugGroup must have a corresponding call to<br/>

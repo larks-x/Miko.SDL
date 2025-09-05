@@ -4050,6 +4050,7 @@ public enum SDL_SensorType
 	/// </summary>
 	/// <unmanaged>SDL_SENSOR_GYRO_R</unmanaged>
 	GyroR = 6,
+	Count = 7,
 }
 
 /// <summary>
@@ -5696,7 +5697,7 @@ public enum SDL_GPUCompareOp
 	/// <unmanaged>SDL_GPU_COMPAREOP_NOT_EQUAL</unmanaged>
 	NotEqual = 6,
 	/// <summary>
-	/// The comparison evalutes reference >= test.
+	/// The comparison evaluates reference >= test.
 	/// </summary>
 	/// <unmanaged>SDL_GPU_COMPAREOP_GREATER_OR_EQUAL</unmanaged>
 	GreaterOrEqual = 7,

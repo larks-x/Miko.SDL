@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.2.20</VersionPrefix>
+    <VersionPrefix>3.2.22</VersionPrefix>
     <!--<VersionSuffix>bate1.0</VersionSuffix>-->
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>

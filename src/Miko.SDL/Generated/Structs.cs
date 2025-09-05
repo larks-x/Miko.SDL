@@ -169,7 +169,7 @@ public partial struct SDL_CameraSpec
 	/// </summary>
 	public int framerate_numerator;
 	/// <summary>
-	/// Frame rate demoninator ((num / denom) == FPS, (denom / num) == duration in seconds)
+	/// Frame rate denominator ((num / denom) == FPS, (denom / num) == duration in seconds)
 	/// </summary>
 	public int framerate_denominator;
 }
