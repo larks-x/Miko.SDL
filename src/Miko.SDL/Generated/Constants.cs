@@ -735,7 +735,7 @@ public static partial class SDL3
 	public const uint SDL_NS_PER_US = 1000;
 	public const int SDL_MAJOR_VERSION = 3;
 	public const int SDL_MINOR_VERSION = 2;
-	public const int SDL_MICRO_VERSION = 22;
+	public const int SDL_MICRO_VERSION = 24;
 	public static ReadOnlySpan<byte> SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER => "SDL.video.wayland.wl_display"u8;
 	public const ulong SDL_WINDOW_FULLSCREEN = 0x0000000000000001;
 	public const ulong SDL_WINDOW_OPENGL = 0x0000000000000002;
