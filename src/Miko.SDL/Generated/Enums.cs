@@ -244,6 +244,23 @@ public enum SDL_CameraPosition
 }
 
 /// <summary>
+/// The current state of a request for camera access.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.4.0.<br/>
+/// <br/>
+/// @sa SDL_GetCameraPermissionState
+/// </summary>
+public enum SDL_CameraPermissionState
+{
+	/// <unmanaged>SDL_CAMERA_PERMISSION_STATE_DENIED</unmanaged>
+	SDL_CAMERA_PERMISSION_STATE_DENIED = -1,
+	/// <unmanaged>SDL_CAMERA_PERMISSION_STATE_PENDING</unmanaged>
+	SDL_CAMERA_PERMISSION_STATE_PENDING = 0,
+	/// <unmanaged>SDL_CAMERA_PERMISSION_STATE_APPROVED</unmanaged>
+	SDL_CAMERA_PERMISSION_STATE_APPROVED = 1,
+}
+
+/// <summary>
 /// Various types of file dialogs.<br/>
 /// This is used by SDL_ShowFileDialogWithProperties() to decide what kind of<br/>
 /// dialog to present to the user.<br/>
@@ -366,10 +383,15 @@ public enum SDL_EventType
 	/// </summary>
 	/// <unmanaged>SDL_EVENT_DISPLAY_CONTENT_SCALE_CHANGED</unmanaged>
 	DisplayContentScaleChanged = 343,
+	/// <summary>
+	/// Display has changed usable bounds
+	/// </summary>
+	/// <unmanaged>SDL_EVENT_DISPLAY_USABLE_BOUNDS_CHANGED</unmanaged>
+	DisplayUsableBoundsChanged = 344,
 	/// <unmanaged>SDL_EVENT_DISPLAY_FIRST</unmanaged>
 	DisplayFirst = DisplayOrientation,
 	/// <unmanaged>SDL_EVENT_DISPLAY_LAST</unmanaged>
-	DisplayLast = DisplayContentScaleChanged,
+	DisplayLast = DisplayUsableBoundsChanged,
 	/// <summary>
 	/// Window has been shown
 	/// </summary>
@@ -381,7 +403,8 @@ public enum SDL_EventType
 	/// <unmanaged>SDL_EVENT_WINDOW_HIDDEN</unmanaged>
 	WindowHidden = 515,
 	/// <summary>
-	/// Window has been exposed and should be redrawn, and can be redrawn directly from event watchers for this event
+	/// Window has been exposed and should be redrawn, and can be redrawn directly from event watchers for this event.<br/>
+	/// data1 is 1 for live-resize expose events, 0 otherwise.
 	/// </summary>
 	/// <unmanaged>SDL_EVENT_WINDOW_EXPOSED</unmanaged>
 	WindowExposed = 516,
@@ -544,6 +567,16 @@ public enum SDL_EventType
 	/// <unmanaged>SDL_EVENT_TEXT_EDITING_CANDIDATES</unmanaged>
 	TextEditingCandidates = 775,
 	/// <summary>
+	/// The on-screen keyboard has been shown
+	/// </summary>
+	/// <unmanaged>SDL_EVENT_SCREEN_KEYBOARD_SHOWN</unmanaged>
+	ScreenKeyboardShown = 776,
+	/// <summary>
+	/// The on-screen keyboard has been hidden
+	/// </summary>
+	/// <unmanaged>SDL_EVENT_SCREEN_KEYBOARD_HIDDEN</unmanaged>
+	ScreenKeyboardHidden = 777,
+	/// <summary>
 	/// Mouse moved
 	/// </summary>
 	/// <unmanaged>SDL_EVENT_MOUSE_MOTION</unmanaged>
@@ -699,7 +732,22 @@ public enum SDL_EventType
 	/// <unmanaged>SDL_EVENT_FINGER_CANCELED</unmanaged>
 	FingerCanceled = 1795,
 	/// <summary>
-	/// The clipboard or primary selection changed
+	/// Pinch gesture started
+	/// </summary>
+	/// <unmanaged>SDL_EVENT_PINCH_BEGIN</unmanaged>
+	PinchBegin = 0x710,
+	/// <summary>
+	/// Pinch gesture updated
+	/// </summary>
+	/// <unmanaged>SDL_EVENT_PINCH_UPDATE</unmanaged>
+	PinchUpdate = 1809,
+	/// <summary>
+	/// Pinch gesture ended
+	/// </summary>
+	/// <unmanaged>SDL_EVENT_PINCH_END</unmanaged>
+	PinchEnd = 1810,
+	/// <summary>
+	/// The clipboard changed
 	/// </summary>
 	/// <unmanaged>SDL_EVENT_CLIPBOARD_UPDATE</unmanaged>
 	ClipboardUpdate = 0x900,
@@ -1071,7 +1119,9 @@ public enum SDL_GamepadType
 	NintendoSwitchJoyconRight = 9,
 	/// <unmanaged>SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR</unmanaged>
 	NintendoSwitchJoyconPair = 10,
-	Count = 11,
+	/// <unmanaged>SDL_GAMEPAD_TYPE_GAMECUBE</unmanaged>
+	Gamecube = 11,
+	Count = 12,
 }
 
 /// <summary>
@@ -1079,8 +1129,9 @@ public enum SDL_GamepadType
 /// For controllers that use a diamond pattern for the face buttons, the<br/>
 /// south/east/west/north buttons below correspond to the locations in the<br/>
 /// diamond pattern. For Xbox controllers, this would be A/B/X/Y, for Nintendo<br/>
-/// Switch controllers, this would be B/A/Y/X, for PlayStation controllers this<br/>
-/// would be Cross/Circle/Square/Triangle.<br/>
+/// Switch controllers, this would be B/A/Y/X, for GameCube controllers this<br/>
+/// would be A/X/B/Y, for PlayStation controllers this would be<br/>
+/// Cross/Circle/Square/Triangle.<br/>
 /// For controllers that don't use a diamond pattern for the face buttons, the<br/>
 /// south/east/west/north buttons indicate the buttons labeled A, B, C, D, or<br/>
 /// 1, 2, 3, 4, or for controllers that aren't labeled, they are the primary,<br/>
@@ -1145,22 +1196,22 @@ public enum SDL_GamepadButton
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC1</unmanaged>
 	Misc1 = 15,
 	/// <summary>
-	/// Upper or primary paddle, under your right hand (e.g. Xbox Elite paddle P1)
+	/// Upper or primary paddle, under your right hand (e.g. Xbox Elite paddle P1, DualSense Edge RB button, Right Joy-Con SR button)
 	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1</unmanaged>
 	RightPaddle1 = 16,
 	/// <summary>
-	/// Upper or primary paddle, under your left hand (e.g. Xbox Elite paddle P3)
+	/// Upper or primary paddle, under your left hand (e.g. Xbox Elite paddle P3, DualSense Edge LB button, Left Joy-Con SL button)
 	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE1</unmanaged>
 	LeftPaddle1 = 17,
 	/// <summary>
-	/// Lower or secondary paddle, under your right hand (e.g. Xbox Elite paddle P2)
+	/// Lower or secondary paddle, under your right hand (e.g. Xbox Elite paddle P2, DualSense Edge right Fn button, Right Joy-Con SL button)
 	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2</unmanaged>
 	RightPaddle2 = 18,
 	/// <summary>
-	/// Lower or secondary paddle, under your left hand (e.g. Xbox Elite paddle P4)
+	/// Lower or secondary paddle, under your left hand (e.g. Xbox Elite paddle P4, DualSense Edge left Fn button, Left Joy-Con SR button)
 	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE2</unmanaged>
 	LeftPaddle2 = 19,
@@ -1175,12 +1226,12 @@ public enum SDL_GamepadButton
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC2</unmanaged>
 	Misc2 = 21,
 	/// <summary>
-	/// Additional button
+	/// Additional button (e.g. Nintendo GameCube left trigger click)
 	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC3</unmanaged>
 	Misc3 = 22,
 	/// <summary>
-	/// Additional button
+	/// Additional button (e.g. Nintendo GameCube right trigger click)
 	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC4</unmanaged>
 	Misc4 = 23,
@@ -1349,7 +1400,7 @@ public enum SDL_HintPriority
 /// Returning SDL_APP_CONTINUE from these functions will let the app continue<br/>
 /// to run.<br/>
 /// See<br/>
-/// [Main callbacks in SDL3](https://wiki.libsdl.org/SDL3/README/main-functions#main-callbacks-in-sdl3)<br/>
+/// [Main callbacks in SDL3](https://wiki.libsdl.org/SDL3/README-main-functions#main-callbacks-in-sdl3)<br/>
 /// for complete details.<br/>
 /// <br/>
 /// @since This enum is available since SDL 3.2.0.
@@ -1445,6 +1496,9 @@ public enum SDL_IOWhence
 /// SDL_GetJoystickTypeForID).<br/>
 /// This is by no means a complete list of everything that can be plugged into<br/>
 /// a computer.<br/>
+/// You may refer to<br/>
+/// [XInput Controller Types](https://learn.microsoft.com/en-us/windows/win32/xinput/xinput-and-controller-subtypes)<br/>
+/// table for a general understanding of each joystick type.<br/>
 /// <br/>
 /// @since This enum is available since SDL 3.2.0.
 /// </summary>
@@ -1915,6 +1969,43 @@ public enum SDL_PenAxis
 	/// Total known pen axis types in this version of SDL. This number may grow in future releases!
 	/// </summary>
 	Count = 7,
+}
+
+/// <summary>
+/// An enum that describes the type of a pen device.<br/>
+/// A "direct" device is a pen that touches a graphic display (like an Apple<br/>
+/// Pencil on an iPad's screen). "Indirect" devices touch an external tablet<br/>
+/// surface that is connected to the machine but is not a display (like a<br/>
+/// lower-end Wacom tablet connected over USB).<br/>
+/// Apps may use this information to decide if they should draw a cursor; if<br/>
+/// the pen is touching the screen directly, a cursor doesn't make sense and<br/>
+/// can be in the way, but becomes necessary for indirect devices to know where<br/>
+/// on the display they are interacting.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.4.0.
+/// </summary>
+public enum SDL_PenDeviceType
+{
+	/// <summary>
+	/// Not a valid pen device.
+	/// </summary>
+	/// <unmanaged>SDL_PEN_DEVICE_TYPE_INVALID</unmanaged>
+	SDL_PEN_DEVICE_TYPE_INVALID = -1,
+	/// <summary>
+	/// Don't know specifics of this pen.
+	/// </summary>
+	/// <unmanaged>SDL_PEN_DEVICE_TYPE_UNKNOWN</unmanaged>
+	SDL_PEN_DEVICE_TYPE_UNKNOWN = 0,
+	/// <summary>
+	/// Pen touches display.
+	/// </summary>
+	/// <unmanaged>SDL_PEN_DEVICE_TYPE_DIRECT</unmanaged>
+	SDL_PEN_DEVICE_TYPE_DIRECT = 1,
+	/// <summary>
+	/// Pen touches something that isn't the display.
+	/// </summary>
+	/// <unmanaged>SDL_PEN_DEVICE_TYPE_INDIRECT</unmanaged>
+	SDL_PEN_DEVICE_TYPE_INDIRECT = 2,
 }
 
 /// <summary>
@@ -2790,7 +2881,7 @@ public enum SDL_Colorspace
 	/// The default colorspace for YUV surfaces if no colorspace is specified
 	/// </summary>
 	/// <unmanaged>SDL_COLORSPACE_YUV_DEFAULT</unmanaged>
-	YuvDefault = 570426566,
+	YuvDefault = 554703046,
 }
 
 /// <summary>
@@ -2879,6 +2970,36 @@ public enum SDL_TextureAccess
 }
 
 /// <summary>
+/// The addressing mode for a texture when used in SDL_RenderGeometry().<br/>
+/// This affects how texture coordinates are interpreted outside of [0, 1]<br/>
+/// Texture wrapping is always supported for power of two texture sizes, and is<br/>
+/// supported for other texture sizes if<br/>
+/// SDL_PROP_RENDERER_TEXTURE_WRAPPING_BOOLEAN is set to true.<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.4.0.
+/// </summary>
+public enum SDL_TextureAddressMode
+{
+	/// <unmanaged>SDL_TEXTURE_ADDRESS_INVALID</unmanaged>
+	SDL_TEXTURE_ADDRESS_INVALID = -1,
+	/// <summary>
+	/// Wrapping is enabled if texture coordinates are outside [0, 1], this is the default
+	/// </summary>
+	/// <unmanaged>SDL_TEXTURE_ADDRESS_AUTO</unmanaged>
+	SDL_TEXTURE_ADDRESS_AUTO = 0,
+	/// <summary>
+	/// Texture coordinates are clamped to the [0, 1] range
+	/// </summary>
+	/// <unmanaged>SDL_TEXTURE_ADDRESS_CLAMP</unmanaged>
+	SDL_TEXTURE_ADDRESS_CLAMP = 1,
+	/// <summary>
+	/// The texture is repeated (tiled)
+	/// </summary>
+	/// <unmanaged>SDL_TEXTURE_ADDRESS_WRAP</unmanaged>
+	SDL_TEXTURE_ADDRESS_WRAP = 2,
+}
+
+/// <summary>
 /// How the logical size is mapped to the output.<br/>
 /// <br/>
 /// @since This enum is available since SDL 3.2.0.
@@ -2896,7 +3017,7 @@ public enum SDL_RendererLogicalPresentation
 	/// <unmanaged>SDL_LOGICAL_PRESENTATION_STRETCH</unmanaged>
 	SDL_LOGICAL_PRESENTATION_STRETCH = 1,
 	/// <summary>
-	/// The rendered content is fit to the largest dimension and the other dimension is letterboxed with black bars
+	/// The rendered content is fit to the largest dimension and the other dimension is letterboxed with the clear color
 	/// </summary>
 	/// <unmanaged>SDL_LOGICAL_PRESENTATION_LETTERBOX</unmanaged>
 	SDL_LOGICAL_PRESENTATION_LETTERBOX = 2,
@@ -4081,6 +4202,11 @@ public enum SDL_ScaleMode
 	/// </summary>
 	/// <unmanaged>SDL_SCALEMODE_LINEAR</unmanaged>
 	Linear = 1,
+	/// <summary>
+	/// nearest pixel sampling with improved scaling for pixel art, available since SDL 3.4.0
+	/// </summary>
+	/// <unmanaged>SDL_SCALEMODE_PIXELART</unmanaged>
+	Pixelart = 2,
 }
 
 /// <summary>
@@ -4105,6 +4231,11 @@ public enum SDL_FlipMode
 	/// </summary>
 	/// <unmanaged>SDL_FLIP_VERTICAL</unmanaged>
 	Vertical = 2,
+	/// <summary>
+	/// flip horizontally and vertically (not a diagonal flip)
+	/// </summary>
+	/// <unmanaged>SDL_FLIP_HORIZONTAL_AND_VERTICAL</unmanaged>
+	HorizontalAndVertical = 3,
 }
 
 /// <summary>
@@ -4317,6 +4448,45 @@ public enum SDL_FlashOperation
 }
 
 /// <summary>
+/// Window progress state<br/>
+/// <br/>
+/// @since This enum is available since SDL 3.2.8.
+/// </summary>
+public enum SDL_ProgressState
+{
+	/// <summary>
+	/// An invalid progress state indicating an error; check SDL_GetError()
+	/// </summary>
+	/// <unmanaged>SDL_PROGRESS_STATE_INVALID</unmanaged>
+	SDL_PROGRESS_STATE_INVALID = -1,
+	/// <summary>
+	/// No progress bar is shown
+	/// </summary>
+	/// <unmanaged>SDL_PROGRESS_STATE_NONE</unmanaged>
+	SDL_PROGRESS_STATE_NONE = 0,
+	/// <summary>
+	/// The progress bar is shown in a indeterminate state
+	/// </summary>
+	/// <unmanaged>SDL_PROGRESS_STATE_INDETERMINATE</unmanaged>
+	SDL_PROGRESS_STATE_INDETERMINATE = 1,
+	/// <summary>
+	/// The progress bar is shown in a normal state
+	/// </summary>
+	/// <unmanaged>SDL_PROGRESS_STATE_NORMAL</unmanaged>
+	SDL_PROGRESS_STATE_NORMAL = 2,
+	/// <summary>
+	/// The progress bar is shown in a paused state
+	/// </summary>
+	/// <unmanaged>SDL_PROGRESS_STATE_PAUSED</unmanaged>
+	SDL_PROGRESS_STATE_PAUSED = 3,
+	/// <summary>
+	/// The progress bar is shown in a state indicating the application had an error
+	/// </summary>
+	/// <unmanaged>SDL_PROGRESS_STATE_ERROR</unmanaged>
+	SDL_PROGRESS_STATE_ERROR = 4,
+}
+
+/// <summary>
 /// An enumeration of OpenGL configuration attributes.<br/>
 /// While you can set most OpenGL attributes normally, the attributes listed<br/>
 /// above must be known before SDL creates the window that will be used with<br/>
@@ -4444,7 +4614,7 @@ public enum SDL_GLAttr
 	/// <unmanaged>SDL_GL_SHARE_WITH_CURRENT_CONTEXT</unmanaged>
 	ShareWithCurrentContext = 21,
 	/// <summary>
-	/// requests sRGB capable visual; defaults to 0.
+	/// requests sRGB-capable visual if 1. Defaults to -1 ("don't care"). This is a request; GL drivers might not comply!
 	/// </summary>
 	/// <unmanaged>SDL_GL_FRAMEBUFFER_SRGB_CAPABLE</unmanaged>
 	FramebufferSrgbCapable = 22,

@@ -223,7 +223,7 @@ public partial struct SDL_CommonEvent
 public partial struct SDL_DisplayEvent
 {
 	/// <summary>
-	/// SDL_DISPLAYEVENT_*
+	/// SDL_EVENT_DISPLAY_*
 	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
@@ -1002,6 +1002,9 @@ public partial struct SDL_GamepadSensorEvent
 
 /// <summary>
 /// Audio device event structure (event.adevice.*)<br/>
+/// Note that SDL will send a SDL_EVENT_AUDIO_DEVICE_ADDED event for every<br/>
+/// device it discovers during initialization. After that, this event will only<br/>
+/// arrive when a device is hotplugged during the program's run.<br/>
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.
 /// </summary>
@@ -1133,7 +1136,33 @@ public partial struct SDL_TouchFingerEvent
 }
 
 /// <summary>
-/// Pressure-sensitive pen proximity event structure (event.pmotion.*)<br/>
+/// Pinch event structure (event.pinch.*)
+/// </summary>
+public partial struct SDL_PinchFingerEvent
+{
+	/// <summary>
+	/// ::SDL_EVENT_PINCH_BEGIN or ::SDL_EVENT_PINCH_UPDATE or ::SDL_EVENT_PINCH_END
+	/// </summary>
+	public SDL_EventType type;
+	public uint reserved;
+	/// <summary>
+	/// In nanoseconds, populated using SDL_GetTicksNS()
+	/// </summary>
+	public ulong timestamp;
+	/// <summary>
+	/// The scale change since the last SDL_EVENT_PINCH_UPDATE. Scale<br/>
+	/// <<br/>
+	/// 1 is "zoom out". Scale > 1 is "zoom in".
+	/// </summary>
+	public float scale;
+	/// <summary>
+	/// The window underneath the finger, if any
+	/// </summary>
+	public SDL_WindowID windowID;
+}
+
+/// <summary>
+/// Pressure-sensitive pen proximity event structure (event.pproximity.*)<br/>
 /// When a pen becomes visible to the system (it is close enough to a tablet,<br/>
 /// etc), SDL will send an SDL_EVENT_PEN_PROXIMITY_IN event with the new pen's<br/>
 /// ID. This ID is valid until the pen leaves proximity again (has been removed<br/>
@@ -1142,6 +1171,8 @@ public partial struct SDL_TouchFingerEvent
 /// Note that "proximity" means "close enough for the tablet to know the tool<br/>
 /// is there." The pen touching and lifting off from the tablet while not<br/>
 /// leaving the area are handled by SDL_EVENT_PEN_DOWN and SDL_EVENT_PEN_UP.<br/>
+/// Not all platforms have a window associated with the pen during proximity<br/>
+/// events. Some wait until motion/button/etc events to offer this info.<br/>
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.
 /// </summary>
@@ -1486,7 +1517,7 @@ public partial struct SDL_QuitEvent
 public partial struct SDL_UserEvent
 {
 	/// <summary>
-	/// SDL_EVENT_USER through SDL_EVENT_LAST-1, Uint32 because these are not in the SDL_EventType enumeration
+	/// SDL_EVENT_USER through SDL_EVENT_LAST, Uint32 because these are not in the SDL_EventType enumeration
 	/// </summary>
 	public SDL_EventType type;
 	public uint reserved;
@@ -1672,6 +1703,11 @@ public partial struct SDL_Event
 	/// </summary>
 	[FieldOffset(0)]
 	public SDL_TouchFingerEvent tfinger;
+	/// <summary>
+	/// Pinch event data
+	/// </summary>
+	[FieldOffset(0)]
+	public SDL_PinchFingerEvent pinch;
 	/// <summary>
 	/// Pen proximity event data
 	/// </summary>
@@ -1933,7 +1969,7 @@ public partial struct SDL_HapticConstant
 	/// <summary>
 	/// SDL_HAPTIC_CONSTANT
 	/// </summary>
-	public ushort type;
+	public SDL_HapticEffectType type;
 	/// <summary>
 	/// Direction of the effect.
 	/// </summary>
@@ -2110,7 +2146,7 @@ public partial struct SDL_HapticPeriodic
 	/// SDL_HAPTIC_TRIANGLE, SDL_HAPTIC_SAWTOOTHUP or<br/>
 	/// SDL_HAPTIC_SAWTOOTHDOWN
 	/// </summary>
-	public ushort type;
+	public SDL_HapticEffectType type;
 	/// <summary>
 	/// Direction of the effect.
 	/// </summary>
@@ -2195,7 +2231,7 @@ public partial struct SDL_HapticCondition
 	/// SDL_HAPTIC_SPRING, SDL_HAPTIC_DAMPER,<br/>
 	/// SDL_HAPTIC_INERTIA or SDL_HAPTIC_FRICTION
 	/// </summary>
-	public ushort type;
+	public SDL_HapticEffectType type;
 	/// <summary>
 	/// Direction of the effect.
 	/// </summary>
@@ -2260,7 +2296,7 @@ public partial struct SDL_HapticRamp
 	/// <summary>
 	/// SDL_HAPTIC_RAMP
 	/// </summary>
-	public ushort type;
+	public SDL_HapticEffectType type;
 	/// <summary>
 	/// Direction of the effect.
 	/// </summary>
@@ -2324,7 +2360,7 @@ public partial struct SDL_HapticLeftRight
 	/// <summary>
 	/// SDL_HAPTIC_LEFTRIGHT
 	/// </summary>
-	public ushort type;
+	public SDL_HapticEffectType type;
 	/// <summary>
 	/// Duration of the effect in milliseconds.
 	/// </summary>
@@ -2358,7 +2394,7 @@ public partial struct SDL_HapticCustom
 	/// <summary>
 	/// SDL_HAPTIC_CUSTOM
 	/// </summary>
-	public ushort type;
+	public SDL_HapticEffectType type;
 	/// <summary>
 	/// Direction of the effect.
 	/// </summary>
@@ -2622,7 +2658,7 @@ public partial struct SDL_IOStreamInterface
 	public unsafe delegate* unmanaged[Cdecl]<nint, long, SDL_IOWhence, long> seek;
 	/// <summary>
 	/// Read up to `size` bytes from the data stream to the area pointed<br/>
-	/// at by `ptr`.<br/>
+	/// at by `ptr`. `size` will always be > 0.<br/>
 	/// On an incomplete read, you should set `*status` to a value from the<br/>
 	/// SDL_IOStatus enum. You do not have to explicitly set this on<br/>
 	/// a complete, successful read.<br/>
@@ -2632,7 +2668,7 @@ public partial struct SDL_IOStreamInterface
 	public unsafe delegate* unmanaged[Cdecl]<nint, nint, nuint, SDL_IOStatus*, nuint> read;
 	/// <summary>
 	/// Write exactly `size` bytes from the area pointed at by `ptr`<br/>
-	/// to data stream.<br/>
+	/// to data stream. `size` will always be > 0.<br/>
 	/// On an incomplete write, you should set `*status` to a value from the<br/>
 	/// SDL_IOStatus enum. You do not have to explicitly set this on<br/>
 	/// a complete, successful write.<br/>
@@ -2942,10 +2978,27 @@ public partial struct SDL_MessageBoxData
 }
 
 /// <summary>
+/// Animated cursor frame info.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.4.0.
+/// </summary>
+public partial struct SDL_CursorFrameInfo
+{
+	/// <summary>
+	/// The surface data for this frame
+	/// </summary>
+	public unsafe SDL_Surface* surface;
+	/// <summary>
+	/// The frame duration in milliseconds (a duration of 0 is infinite)
+	/// </summary>
+	public uint duration;
+}
+
+/// <summary>
 /// A structure used for thread-safe initialization and shutdown.<br/>
 /// Here is an example of using this:<br/>
 /// ```c<br/>
-/// static SDL_AtomicInitState init;<br/>
+/// static SDL_InitState init;<br/>
 /// bool InitSystem(void)<br/>
 /// {<br/>
 /// if (!SDL_ShouldInit(<br/>
@@ -3137,8 +3190,10 @@ public partial struct SDL_Rect
 }
 
 /// <summary>
-/// A rectangle, with the origin at the upper left (using floating point<br/>
-/// values).<br/>
+/// A rectangle stored using floating point values.<br/>
+/// The origin of the coordinate space is in the top-left, with increasing<br/>
+/// values moving down and right. The properties `x` and `y` represent the<br/>
+/// coordinates of the top-left corner of the rectangle.<br/>
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
@@ -3209,6 +3264,49 @@ public partial struct SDL_Texture
 	/// Application reference count, used when freeing texture
 	/// </summary>
 	public int refcount;
+}
+
+/// <summary>
+/// A structure specifying the parameters of a GPU render state.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.4.0.<br/>
+/// <br/>
+/// @sa SDL_CreateGPURenderState
+/// </summary>
+public partial struct SDL_GPURenderStateCreateInfo
+{
+	/// <summary>
+	/// The fragment shader to use when this render state is active
+	/// </summary>
+	public SDL_GPUShader fragment_shader;
+	/// <summary>
+	/// The number of additional fragment samplers to bind when this render state is active
+	/// </summary>
+	public int num_sampler_bindings;
+	/// <summary>
+	/// Additional fragment samplers to bind when this render state is active
+	/// </summary>
+	public unsafe SDL_GPUTextureSamplerBinding* sampler_bindings;
+	/// <summary>
+	/// The number of storage textures to bind when this render state is active
+	/// </summary>
+	public int num_storage_textures;
+	/// <summary>
+	/// Storage textures to bind when this render state is active
+	/// </summary>
+	public unsafe SDL_GPUTexture** storage_textures;
+	/// <summary>
+	/// The number of storage buffers to bind when this render state is active
+	/// </summary>
+	public int num_storage_buffers;
+	/// <summary>
+	/// Storage buffers to bind when this render state is active
+	/// </summary>
+	public unsafe SDL_GPUBuffer** storage_buffers;
+	/// <summary>
+	/// A properties ID for extensions. Should be 0 if no extensions are needed.
+	/// </summary>
+	public SDL_PropertiesID props;
 }
 
 public partial struct SDL_alignment_test
@@ -3507,6 +3605,15 @@ public partial struct SDL_GPUViewport
 /// <summary>
 /// A structure specifying parameters related to transferring data to or from a<br/>
 /// texture.<br/>
+/// If either of `pixels_per_row` or `rows_per_layer` is zero, then width and<br/>
+/// height of passed SDL_GPUTextureRegion to SDL_UploadToGPUTexture or<br/>
+/// SDL_DownloadFromGPUTexture are used as default values respectively and data<br/>
+/// is considered to be tightly packed.<br/>
+/// **WARNING**: Direct3D 12 requires texture data row pitch to be 256 byte<br/>
+/// aligned, and offsets to be aligned to 512 bytes. If they are not, SDL will<br/>
+/// make a temporary copy of the data that is properly aligned, but this adds<br/>
+/// overhead to the transfer process. Apps can avoid this by aligning their<br/>
+/// data appropriately, or using a different GPU backend than Direct3D 12.<br/>
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
@@ -4021,7 +4128,10 @@ public partial struct SDL_GPUStencilOpState
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
-/// @sa SDL_GPUColorTargetDescription
+/// @sa SDL_GPUColorTargetDescription<br/>
+/// @sa SDL_GPUBlendFactor<br/>
+/// @sa SDL_GPUBlendOp<br/>
+/// @sa SDL_GPUColorComponentFlags
 /// </summary>
 public partial struct SDL_GPUColorTargetBlendState
 {
@@ -4070,7 +4180,9 @@ public partial struct SDL_GPUColorTargetBlendState
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
-/// @sa SDL_CreateGPUShader
+/// @sa SDL_CreateGPUShader<br/>
+/// @sa SDL_GPUShaderFormat<br/>
+/// @sa SDL_GPUShaderStage
 /// </summary>
 public partial struct SDL_GPUShaderCreateInfo
 {
@@ -4293,7 +4405,10 @@ public partial struct SDL_GPUMultisampleState
 	/// Reserved for future use. Must be set to false.
 	/// </summary>
 	public SDLBool enable_mask;
-	public byte padding1;
+	/// <summary>
+	/// true enables the alpha-to-coverage feature.
+	/// </summary>
+	public SDLBool enable_alpha_to_coverage;
 	public byte padding2;
 	public byte padding3;
 }
@@ -4549,7 +4664,8 @@ public partial struct SDL_GPUComputePipelineCreateInfo
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
-/// @sa SDL_BeginGPURenderPass
+/// @sa SDL_BeginGPURenderPass<br/>
+/// @sa SDL_FColor
 /// </summary>
 public partial struct SDL_GPUColorTargetInfo
 {
@@ -4631,6 +4747,8 @@ public partial struct SDL_GPUColorTargetInfo
 /// This is often a good option for depth/stencil textures that don't need to<br/>
 /// be reused again.<br/>
 /// Note that depth/stencil targets do not support multisample resolves.<br/>
+/// Due to ABI limitations, depth textures with more than 255 layers are not<br/>
+/// supported.<br/>
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
@@ -4670,8 +4788,14 @@ public partial struct SDL_GPUDepthStencilTargetInfo
 	/// The value to clear the stencil component to at the beginning of the render pass. Ignored if SDL_GPU_LOADOP_CLEAR is not used.
 	/// </summary>
 	public byte clear_stencil;
-	public byte padding1;
-	public byte padding2;
+	/// <summary>
+	/// The mip level to use as the depth stencil target.
+	/// </summary>
+	public byte mip_level;
+	/// <summary>
+	/// The layer index to use as the depth stencil target.
+	/// </summary>
+	public byte layer;
 }
 
 /// <summary>
@@ -4742,7 +4866,9 @@ public partial struct SDL_GPUBufferBinding
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>
 /// @sa SDL_BindGPUVertexSamplers<br/>
-/// @sa SDL_BindGPUFragmentSamplers
+/// @sa SDL_BindGPUFragmentSamplers<br/>
+/// @sa SDL_GPUTexture<br/>
+/// @sa SDL_GPUSampler
 /// </summary>
 public partial struct SDL_GPUTextureSamplerBinding
 {
@@ -4808,5 +4934,52 @@ public partial struct SDL_GPUStorageTextureReadWriteBinding
 	public byte padding1;
 	public byte padding2;
 	public byte padding3;
+}
+
+/// <summary>
+/// A structure specifying additional options when using Vulkan.<br/>
+/// When no such structure is provided, SDL will use Vulkan API version 1.0 and<br/>
+/// a minimal set of features. The requested API version influences how the<br/>
+/// feature_list is processed by SDL. When requesting API version 1.0, the<br/>
+/// feature_list is ignored. Only the vulkan_10_physical_device_features and<br/>
+/// the extension lists are used. When requesting API version 1.1, the<br/>
+/// feature_list is scanned for feature structures introduced in Vulkan 1.1.<br/>
+/// When requesting Vulkan 1.2 or higher, the feature_list is additionally<br/>
+/// scanned for compound feature structs such as<br/>
+/// VkPhysicalDeviceVulkan11Features. The device and instance extension lists,<br/>
+/// as well as vulkan_10_physical_device_features, are always processed.<br/>
+/// <br/>
+/// @since This struct is available since SDL 3.4.0.
+/// </summary>
+public partial struct SDL_GPUVulkanOptions
+{
+	/// <summary>
+	/// The Vulkan API version to request for the instance. Use Vulkan's VK_MAKE_VERSION or VK_MAKE_API_VERSION.
+	/// </summary>
+	public uint vulkan_api_version;
+	/// <summary>
+	/// Pointer to the first element of a chain of Vulkan feature structs. (Requires API version 1.1 or higher.)
+	/// </summary>
+	public nint feature_list;
+	/// <summary>
+	/// Pointer to a VkPhysicalDeviceFeatures struct to enable additional Vulkan 1.0 features.
+	/// </summary>
+	public nint vulkan_10_physical_device_features;
+	/// <summary>
+	/// Number of additional device extensions to require.
+	/// </summary>
+	public uint device_extension_count;
+	/// <summary>
+	/// Pointer to a list of additional device extensions to require.
+	/// </summary>
+	public unsafe byte** device_extension_names;
+	/// <summary>
+	/// Number of additional instance extensions to require.
+	/// </summary>
+	public uint instance_extension_count;
+	/// <summary>
+	/// Pointer to a list of additional instance extensions to require.
+	/// </summary>
+	public unsafe byte** instance_extension_names;
 }
 
