@@ -307,7 +307,7 @@ partial class CsCodeGenerator
                     {
                         continue;
                     }
-
+                   
                     string enumItemName = GetEnumItemName(cppEnum.Name, enumItem.Name, enumNamePrefix);
 
                     if (enumItemName == "None" && noneAdded)

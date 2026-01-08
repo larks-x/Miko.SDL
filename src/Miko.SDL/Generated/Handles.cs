@@ -93,20 +93,6 @@ public enum SDL_GlobFlags : uint
 	CaseInsensitive = SDL3.SDL_GLOB_CASEINSENSITIVE,
 }
 
-///// <summary>
-///// Type of haptic effect.
-///// </summary>
-//public enum SDL_HapticEffectType : ushort
-//{
-//}
-
-///// <summary>
-///// Type of coordinates used for haptic direction.
-///// </summary>
-//public enum SDL_HapticDirectionType : byte
-//{
-//}
-
 /// <summary>
 /// ID for haptic effects.<br/>
 /// This is -1 if the ID is invalid.<br/>

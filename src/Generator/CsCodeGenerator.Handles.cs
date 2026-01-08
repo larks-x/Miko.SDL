@@ -49,6 +49,8 @@ partial class CsCodeGenerator
         "SDL_MouseButtonFlags",
         "SDL_PenCapabilityFlags",
         "SDL_GLContextFlag",
+        "SDL_HapticEffectType",
+        "SDL_HapticDirectionType"
     };
 
     private readonly HashSet<string> _generatedPointerHandles = [];

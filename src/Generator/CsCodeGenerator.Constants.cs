@@ -242,7 +242,7 @@ partial class CsCodeGenerator
                     || cppMacro.Name == "SDL_HAT_LEFTUP"
                     || cppMacro.Name == "SDL_HAT_LEFTDOWN"
                     || cppMacro.Name.StartsWith("SDL_PEN_")
-                    || cppMacro.Name.StartsWith("SDL_GPU_"))
+                    || (cppMacro.Name.StartsWith("SDL_GPU_")&& cppMacro.Name!= "SDL_GPU_RENDERER"))
                 {
                     modifier = "const";
                     csDataType = "uint";
