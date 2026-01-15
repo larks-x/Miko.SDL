@@ -9,6 +9,7 @@ public static class Program
 {
     public static int Main(string[] args)
     {
+        Console.WriteLine("Working...");
         string outputPath = AppContext.BaseDirectory;
         if (args.Length > 0)
         {
@@ -98,6 +99,7 @@ public static class Program
             Path.Combine(sdlIncludePath, "SDL3/SDL_gpu.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_main.h"),
             Path.Combine(sdlIncludePath, "SDL3/SDL_process.h"),
+            Path.Combine(sdlIncludePath, "SDL3/SDL_tray.h"),
         ];
 
         var options = new CppParserOptions
@@ -157,7 +159,8 @@ public static class Program
         }
 
         generator.Generate();
-
+        Console.WriteLine("Done, press any key to exit.");
+        Console.ReadKey();
         return 0;
     }
 }
