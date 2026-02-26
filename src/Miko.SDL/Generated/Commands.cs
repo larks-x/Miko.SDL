@@ -28651,4 +28651,448 @@ public unsafe partial class SDL3
 	[LibraryImport(LibName, EntryPoint = "SDL_DestroyProcess")]
 	public static partial void SDL_DestroyProcess(SDL_Process process);
 
+	/// <summary>
+	/// Create an icon to be placed in the operating system's tray, or equivalent.<br/>
+	/// Many platforms advise not using a system tray unless persistence is a<br/>
+	/// necessary feature. Avoid needlessly creating a tray icon, as the user may<br/>
+	/// feel like it clutters their interface.<br/>
+	/// Using tray icons require the video subsystem.<br/>
+	/// <br/>
+	/// @param icon a surface to be used as icon. May be NULL.<br/>
+	/// @param tooltip a tooltip to be displayed when the mouse hovers the icon in<br/>
+	/// UTF-8 encoding. Not supported on all platforms. May be NULL.<br/>
+	/// @returns The newly created system tray icon.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTrayMenu<br/>
+	/// @sa SDL_GetTrayMenu<br/>
+	/// @sa SDL_DestroyTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateTray")]
+	public static partial SDL_Tray SDL_CreateTray(SDL_Surface* icon, byte* tooltip);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateTray")]
+	public static partial SDL_Tray SDL_CreateTray(SDL_Surface* icon, ReadOnlySpan<byte> tooltip);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateTray")]
+	public static partial SDL_Tray SDL_CreateTray(SDL_Surface* icon, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> tooltip);
+
+	/// <summary>
+	/// Updates the system tray icon's icon.<br/>
+	/// <br/>
+	/// @param tray the tray icon to be updated.<br/>
+	/// @param icon the new icon. May be NULL.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayIcon")]
+	public static partial void SDL_SetTrayIcon(SDL_Tray tray, SDL_Surface* icon);
+
+	/// <summary>
+	/// Updates the system tray icon's tooltip.<br/>
+	/// <br/>
+	/// @param tray the tray icon to be updated.<br/>
+	/// @param tooltip the new tooltip in UTF-8 encoding. May be NULL.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayTooltip")]
+	public static partial void SDL_SetTrayTooltip(SDL_Tray tray, byte* tooltip);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayTooltip")]
+	public static partial void SDL_SetTrayTooltip(SDL_Tray tray, ReadOnlySpan<byte> tooltip);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayTooltip")]
+	public static partial void SDL_SetTrayTooltip(SDL_Tray tray, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> tooltip);
+
+	/// <summary>
+	/// Create a menu for a system tray.<br/>
+	/// This should be called at most once per tray icon.<br/>
+	/// This function does the same thing as SDL_CreateTraySubmenu(), except that<br/>
+	/// it takes a SDL_Tray instead of a SDL_TrayEntry.<br/>
+	/// A menu does not need to be destroyed; it will be destroyed with the tray.<br/>
+	/// <br/>
+	/// @param tray the tray to bind the menu to.<br/>
+	/// @returns the newly created menu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTray<br/>
+	/// @sa SDL_GetTrayMenu<br/>
+	/// @sa SDL_GetTrayMenuParentTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateTrayMenu")]
+	public static partial SDL_TrayMenu SDL_CreateTrayMenu(SDL_Tray tray);
+
+	/// <summary>
+	/// Create a submenu for a system tray entry.<br/>
+	/// This should be called at most once per tray entry.<br/>
+	/// This function does the same thing as SDL_CreateTrayMenu, except that it<br/>
+	/// takes a SDL_TrayEntry instead of a SDL_Tray.<br/>
+	/// A menu does not need to be destroyed; it will be destroyed with the tray.<br/>
+	/// <br/>
+	/// @param entry the tray entry to bind the menu to.<br/>
+	/// @returns the newly created menu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_GetTraySubmenu<br/>
+	/// @sa SDL_GetTrayMenuParentEntry
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_CreateTraySubmenu")]
+	public static partial SDL_TrayMenu SDL_CreateTraySubmenu(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Gets a previously created tray menu.<br/>
+	/// You should have called SDL_CreateTrayMenu() on the tray object. This<br/>
+	/// function allows you to fetch it again later.<br/>
+	/// This function does the same thing as SDL_GetTraySubmenu(), except that it<br/>
+	/// takes a SDL_Tray instead of a SDL_TrayEntry.<br/>
+	/// A menu does not need to be destroyed; it will be destroyed with the tray.<br/>
+	/// <br/>
+	/// @param tray the tray entry to bind the menu to.<br/>
+	/// @returns the newly created menu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTray<br/>
+	/// @sa SDL_CreateTrayMenu
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayMenu")]
+	public static partial SDL_TrayMenu SDL_GetTrayMenu(SDL_Tray tray);
+
+	/// <summary>
+	/// Gets a previously created tray entry submenu.<br/>
+	/// You should have called SDL_CreateTraySubmenu() on the entry object. This<br/>
+	/// function allows you to fetch it again later.<br/>
+	/// This function does the same thing as SDL_GetTrayMenu(), except that it<br/>
+	/// takes a SDL_TrayEntry instead of a SDL_Tray.<br/>
+	/// A menu does not need to be destroyed; it will be destroyed with the tray.<br/>
+	/// <br/>
+	/// @param entry the tray entry to bind the menu to.<br/>
+	/// @returns the newly created menu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_CreateTraySubmenu
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTraySubmenu")]
+	public static partial SDL_TrayMenu SDL_GetTraySubmenu(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Returns a list of entries in the menu, in order.<br/>
+	/// <br/>
+	/// @param menu The menu to get entries from.<br/>
+	/// @param count An optional pointer to obtain the number of entries in the<br/>
+	/// menu.<br/>
+	/// @returns a NULL-terminated list of entries within the given menu. The<br/>
+	/// pointer becomes invalid when any function that inserts or deletes<br/>
+	/// entries in the menu is called.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_RemoveTrayEntry<br/>
+	/// @sa SDL_InsertTrayEntryAt
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayEntries")]
+	public static partial SDL_TrayEntry SDL_GetTrayEntries(SDL_TrayMenu menu, out int count);
+
+	/// <summary>
+	/// Removes a tray entry.<br/>
+	/// <br/>
+	/// @param entry The entry to be deleted.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_RemoveTrayEntry")]
+	public static partial void SDL_RemoveTrayEntry(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Insert a tray entry at a given position.<br/>
+	/// If label is NULL, the entry will be a separator. Many functions won't work<br/>
+	/// for an entry that is a separator.<br/>
+	/// An entry does not need to be destroyed; it will be destroyed with the tray.<br/>
+	/// <br/>
+	/// @param menu the menu to append the entry to.<br/>
+	/// @param pos the desired position for the new entry. Entries at or following<br/>
+	/// this place will be moved. If pos is -1, the entry is appended.<br/>
+	/// @param label the text to be displayed on the entry, in UTF-8 encoding, or<br/>
+	/// NULL for a separator.<br/>
+	/// @param flags a combination of flags, some of which are mandatory.<br/>
+	/// @returns the newly created entry, or NULL if pos is out of bounds.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_TrayEntryFlags<br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_RemoveTrayEntry<br/>
+	/// @sa SDL_GetTrayEntryParent
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_InsertTrayEntryAt")]
+	public static partial SDL_TrayEntry SDL_InsertTrayEntryAt(SDL_TrayMenu menu, int pos, byte* label, SDL_TrayEntryFlags flags);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_InsertTrayEntryAt")]
+	public static partial SDL_TrayEntry SDL_InsertTrayEntryAt(SDL_TrayMenu menu, int pos, ReadOnlySpan<byte> label, SDL_TrayEntryFlags flags);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_InsertTrayEntryAt")]
+	public static partial SDL_TrayEntry SDL_InsertTrayEntryAt(SDL_TrayMenu menu, int pos, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> label, SDL_TrayEntryFlags flags);
+
+	/// <summary>
+	/// Sets the label of an entry.<br/>
+	/// An entry cannot change between a separator and an ordinary entry; that is,<br/>
+	/// it is not possible to set a non-NULL label on an entry that has a NULL<br/>
+	/// label (separators), or to set a NULL label to an entry that has a non-NULL<br/>
+	/// label. The function will silently fail if that happens.<br/>
+	/// <br/>
+	/// @param entry the entry to be updated.<br/>
+	/// @param label the new label for the entry in UTF-8 encoding.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_GetTrayEntryLabel
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryLabel")]
+	public static partial void SDL_SetTrayEntryLabel(SDL_TrayEntry entry, byte* label);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryLabel")]
+	public static partial void SDL_SetTrayEntryLabel(SDL_TrayEntry entry, ReadOnlySpan<byte> label);
+
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryLabel")]
+	public static partial void SDL_SetTrayEntryLabel(SDL_TrayEntry entry, [global::System.Runtime.InteropServices.Marshalling.MarshalUsing(typeof(Utf8CustomMarshaller))] ReadOnlySpan<char> label);
+
+	/// <summary>
+	/// Gets the label of an entry.<br/>
+	/// If the returned value is NULL, the entry is a separator.<br/>
+	/// <br/>
+	/// @param entry the entry to be read.<br/>
+	/// @returns the label of the entry in UTF-8 encoding.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_SetTrayEntryLabel
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayEntryLabel")]
+	public static partial byte* SDL_GetTrayEntryLabelPtr(SDL_TrayEntry entry);
+
+	public static string? SDL_GetTrayEntryLabel(SDL_TrayEntry entry)
+	{
+		return ConvertToManaged(SDL_GetTrayEntryLabelPtr(entry));
+	}
+
+	/// <summary>
+	/// Sets whether or not an entry is checked.<br/>
+	/// The entry must have been created with the SDL_TRAYENTRY_CHECKBOX flag.<br/>
+	/// <br/>
+	/// @param entry the entry to be updated.<br/>
+	/// @param checked true if the entry should be checked; false otherwise.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_GetTrayEntryChecked
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryChecked")]
+	public static partial void SDL_SetTrayEntryChecked(SDL_TrayEntry entry, SDLBool bchecked);
+
+	/// <summary>
+	/// Gets whether or not an entry is checked.<br/>
+	/// The entry must have been created with the SDL_TRAYENTRY_CHECKBOX flag.<br/>
+	/// <br/>
+	/// @param entry the entry to be read.<br/>
+	/// @returns true if the entry is checked; false otherwise.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_SetTrayEntryChecked
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayEntryChecked")]
+	public static partial SDLBool SDL_GetTrayEntryChecked(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Sets whether or not an entry is enabled.<br/>
+	/// <br/>
+	/// @param entry the entry to be updated.<br/>
+	/// @param enabled true if the entry should be enabled; false otherwise.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_GetTrayEntryEnabled
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryEnabled")]
+	public static partial void SDL_SetTrayEntryEnabled(SDL_TrayEntry entry, SDLBool enabled);
+
+	/// <summary>
+	/// Gets whether or not an entry is enabled.<br/>
+	/// <br/>
+	/// @param entry the entry to be read.<br/>
+	/// @returns true if the entry is enabled; false otherwise.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt<br/>
+	/// @sa SDL_SetTrayEntryEnabled
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayEntryEnabled")]
+	public static partial SDLBool SDL_GetTrayEntryEnabled(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Sets a callback to be invoked when the entry is selected.<br/>
+	/// <br/>
+	/// @param entry the entry to be updated.<br/>
+	/// @param callback a callback to be invoked when the entry is selected.<br/>
+	/// @param userdata an optional pointer to pass extra data to the callback when<br/>
+	/// it will be invoked.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_GetTrayEntries<br/>
+	/// @sa SDL_InsertTrayEntryAt
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryCallback")]
+	public static partial void SDL_SetTrayEntryCallback(SDL_TrayEntry entry, delegate* unmanaged[Cdecl]<nint, SDL_TrayEntry, void> callback, nint userdata);
+
+	/// <summary>
+	/// Simulate a click on a tray entry.<br/>
+	/// <br/>
+	/// @param entry The entry to activate.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_ClickTrayEntry")]
+	public static partial void SDL_ClickTrayEntry(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Destroys a tray object.<br/>
+	/// This also destroys all associated menus and entries.<br/>
+	/// <br/>
+	/// @param tray the tray icon to be destroyed.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_DestroyTray")]
+	public static partial void SDL_DestroyTray(SDL_Tray tray);
+
+	/// <summary>
+	/// Gets the menu containing a certain tray entry.<br/>
+	/// <br/>
+	/// @param entry the entry for which to get the parent menu.<br/>
+	/// @returns the parent menu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_InsertTrayEntryAt
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayEntryParent")]
+	public static partial SDL_TrayMenu SDL_GetTrayEntryParent(SDL_TrayEntry entry);
+
+	/// <summary>
+	/// Gets the entry for which the menu is a submenu, if the current menu is a<br/>
+	/// submenu.<br/>
+	/// Either this function or SDL_GetTrayMenuParentTray() will return non-NULL<br/>
+	/// for any given menu.<br/>
+	/// <br/>
+	/// @param menu the menu for which to get the parent entry.<br/>
+	/// @returns the parent entry, or NULL if this menu is not a submenu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTraySubmenu<br/>
+	/// @sa SDL_GetTrayMenuParentTray
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayMenuParentEntry")]
+	public static partial SDL_TrayEntry SDL_GetTrayMenuParentEntry(SDL_TrayMenu menu);
+
+	/// <summary>
+	/// Gets the tray for which this menu is the first-level menu, if the current<br/>
+	/// menu isn't a submenu.<br/>
+	/// Either this function or SDL_GetTrayMenuParentEntry() will return non-NULL<br/>
+	/// for any given menu.<br/>
+	/// <br/>
+	/// @param menu the menu for which to get the parent enttrayry.<br/>
+	/// @returns the parent tray, or NULL if this menu is a submenu.<br/>
+	/// @threadsafety This function should be called on the thread that created the<br/>
+	/// tray.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_CreateTrayMenu<br/>
+	/// @sa SDL_GetTrayMenuParentEntry
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_GetTrayMenuParentTray")]
+	public static partial SDL_Tray SDL_GetTrayMenuParentTray(SDL_TrayMenu menu);
+
+	/// <summary>
+	/// Update the trays.<br/>
+	/// This is called automatically by the event loop and is only needed if you're<br/>
+	/// using trays but aren't handling SDL events.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
+	/// <br/>
+	/// @since This function is available since SDL 3.2.0.
+	/// </summary>
+	[LibraryImport(LibName, EntryPoint = "SDL_UpdateTrays")]
+	public static partial void SDL_UpdateTrays();
+
 }

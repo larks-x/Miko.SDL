@@ -24,9 +24,9 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - { name: win-x64,     os: windows-latest,   flags: -A x64 }
-          - { name: win-x86,     os: windows-latest,   flags: -A Win32 }
-          - { name: win-arm64,   os: windows-latest,   flags: -A ARM64 }
+          - { name: win-x64,     os: windows-latest,   flags: -A x64 -DUNICODE=ON -D_UNICODE=ON }
+          - { name: win-x86,     os: windows-latest,   flags: -A Win32 -DUNICODE=ON -D_UNICODE=ON }
+          - { name: win-arm64,   os: windows-latest,   flags: -A ARM64 -DUNICODE=ON -D_UNICODE=ON }
           - { name: linux-x64,   os: ubuntu-22.04,     flags: -GNinja, target_apt_arch: ":amd64" }
           - { name: linux-x86,   os: ubuntu-22.04,     flags: -GNinja -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32", target_apt_arch: ":i386" }
           - { name: linux-arm64, os: ubuntu-22.04-arm, flags: -GNinja, target_apt_arch: ":arm64", container: "arm64v8/ubuntu:22.04" }

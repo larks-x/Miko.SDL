@@ -977,6 +977,11 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_PROP_PROCESS_STDOUT_POINTER => "SDL.process.stdout"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_PROCESS_STDERR_POINTER => "SDL.process.stderr"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_PROCESS_BACKGROUND_BOOLEAN => "SDL.process.background"u8;
+	public const uint SDL_TRAYENTRY_BUTTON = 0x00000001u;
+	public const uint SDL_TRAYENTRY_CHECKBOX = 0x00000002u;
+	public const uint SDL_TRAYENTRY_SUBMENU = 0x00000004u;
+	public const uint SDL_TRAYENTRY_DISABLED = 0x80000000u;
+	public const uint SDL_TRAYENTRY_CHECKED = 0x40000000u;
 
 	public const SDL_AsyncIOTaskType SDL_ASYNCIO_TASK_READ = SDL_AsyncIOTaskType.Read;
 	public const SDL_AsyncIOTaskType SDL_ASYNCIO_TASK_WRITE = SDL_AsyncIOTaskType.Write;
