@@ -95,7 +95,11 @@ if [[ $RUNNER_OS == 'Windows' ]]; then
     sed -i 's/#include <gameinput.h>/#_include <gameinput.h>/g' CMakeLists.txt
 fi
 
-cmake -B build $FLAGS -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSDL_SHARED_ENABLED_BY_DEFAULT=ON -DSDL_STATIC_ENABLED_BY_DEFAULT=ON
+if [[ $RUNNER_OS == 'Windows' ]]; then
+    cmake -B build $FLAGS -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_FLAGS="/DUNICODE /D_UNICODE" -DCMAKE_CXX_FLAGS="/DUNICODE /D_UNICODE" -DSDL_SHARED_ENABLED_BY_DEFAULT=ON -DSDL_STATIC_ENABLED_BY_DEFAULT=ON
+else
+    cmake -B build $FLAGS -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSDL_SHARED_ENABLED_BY_DEFAULT=ON -DSDL_STATIC_ENABLED_BY_DEFAULT=ON
+fi
 cmake --build build/ --config Release
 $SUDO cmake --install build/ --prefix install_output --config Release
 popd
