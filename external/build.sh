@@ -93,8 +93,6 @@ git reset --hard HEAD || echo "Failed to clean up the repository"
 if [[ $RUNNER_OS == 'Windows' ]]; then
     echo "Patching SDL to not include gameinput.h"
     sed -i 's/#include <gameinput.h>/#_include <gameinput.h>/g' CMakeLists.txt
-    echo "Patching SDL to enable Unicode compilation"
-    sed -i '/CXX_COMPILER_ID:MSVC>:\/utf-8/a add_definitions(-DUNICODE -D_UNICODE)' CMakeLists.txt
 fi
 
 cmake -B build $FLAGS -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSDL_SHARED_ENABLED_BY_DEFAULT=ON -DSDL_STATIC_ENABLED_BY_DEFAULT=ON
