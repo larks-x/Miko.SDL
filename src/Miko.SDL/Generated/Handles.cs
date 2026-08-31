@@ -684,8 +684,8 @@ public enum SDL_GLContextResetNotification : uint
 
 /// <summary>
 /// Specifies how a texture is intended to be used by the client.<br/>
-/// A texture must have at least one usage flag. Note that some usage flag<br/>
-/// combinations are invalid.<br/>
+/// A texture must have at least one usage flag.<br/>
+/// Note that combining SAMPLER with STORAGE_READ flags is invalid.<br/>
 /// With regards to compute storage usage, READ | WRITE means that you can have<br/>
 /// shader A that only writes into the texture and shader B that only reads<br/>
 /// from the texture and bind the same texture to either shader respectively.<br/>
@@ -714,8 +714,9 @@ public enum SDL_GPUTextureUsageFlags : uint
 
 /// <summary>
 /// Specifies how a buffer is intended to be used by the client.<br/>
-/// A buffer must have at least one usage flag. Note that some usage flag<br/>
-/// combinations are invalid.<br/>
+/// A buffer must have at least one usage flag.<br/>
+/// If a buffer has multiple read usages, this may lead to a performance penalty<br/>
+/// due to more conservative memory barriers, but it also may not necessarily affect the performance.<br/>
 /// Unlike textures, READ | WRITE can be used for simultaneous read-write<br/>
 /// usage. The same data synchronization concerns as textures apply.<br/>
 /// If you use a STORAGE flag, the data in the buffer must respect std140<br/>
@@ -863,7 +864,8 @@ public readonly partial struct SDL_AsyncIOQueue(nint value) : IEquatable<SDL_Asy
 /// - It can handle incoming data in any variable size.<br/>
 /// - It can handle input/output format changes on the fly.<br/>
 /// - It can remap audio channels between inputs and outputs.<br/>
-/// - You push data as you have it, and pull it when you need it<br/>
+/// - You push data as you have it, and pull it when you need it; the<br/>
+/// stream will buffer data as needed.<br/>
 /// - It can also function as a basic audio data queue even if you just have<br/>
 /// sound that needs to pass from one place to another.<br/>
 /// - You can hook callbacks up to them when more data is added or requested,<br/>

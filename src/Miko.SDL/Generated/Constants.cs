@@ -82,6 +82,7 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_HINT_EMSCRIPTEN_CANVAS_SELECTOR => "SDL_EMSCRIPTEN_CANVAS_SELECTOR"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT => "SDL_EMSCRIPTEN_KEYBOARD_ELEMENT"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_ENABLE_SCREEN_KEYBOARD => "SDL_ENABLE_SCREEN_KEYBOARD"u8;
+	public static ReadOnlySpan<byte> SDL_HINT_ENABLE_STEAM_SCREEN_KEYBOARD => "SDL_ENABLE_STEAM_SCREEN_KEYBOARD"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_EVDEV_DEVICES => "SDL_EVDEV_DEVICES"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_EVENT_LOGGING => "SDL_EVENT_LOGGING"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_FORCE_RAISEWINDOW => "SDL_FORCE_RAISEWINDOW"u8;
@@ -116,6 +117,7 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_FLIGHTSTICK_DEVICES => "SDL_JOYSTICK_FLIGHTSTICK_DEVICES"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_FLIGHTSTICK_DEVICES_EXCLUDED => "SDL_JOYSTICK_FLIGHTSTICK_DEVICES_EXCLUDED"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_GAMEINPUT => "SDL_JOYSTICK_GAMEINPUT"u8;
+	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_GAMEINPUT_RAW => "SDL_JOYSTICK_GAMEINPUT_RAW"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_GAMECUBE_DEVICES => "SDL_JOYSTICK_GAMECUBE_DEVICES"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_GAMECUBE_DEVICES_EXCLUDED => "SDL_JOYSTICK_GAMECUBE_DEVICES_EXCLUDED"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI => "SDL_JOYSTICK_HIDAPI"u8;
@@ -206,6 +208,7 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_HINT_OPENGL_LIBRARY => "SDL_OPENGL_LIBRARY"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_EGL_LIBRARY => "SDL_EGL_LIBRARY"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_OPENGL_ES_DRIVER => "SDL_OPENGL_ES_DRIVER"u8;
+	public static ReadOnlySpan<byte> SDL_HINT_OPENGL_FORCE_SRGB_FRAMEBUFFER => "SDL_OPENGL_FORCE_SRGB_FRAMEBUFFER"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_OPENVR_LIBRARY => "SDL_OPENVR_LIBRARY"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_ORIENTATIONS => "SDL_ORIENTATIONS"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_POLL_SENTINEL => "SDL_POL_SENTINEL"u8;
@@ -259,6 +262,7 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_PREFER_LIBDECOR => "SDL_VIDEO_WAYLAND_PREFER_LIBDECOR"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_SCALE_TO_DISPLAY => "SDL_VIDEO_WAYLAND_SCALE_TO_DISPLAY"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WIN_D3DCOMPILER => "SDL_VIDEO_WIN_D3DCOMPILER"u8;
+	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_ENABLE_XSYNC_EXT => "SDL_VIDEO_X11_ENABLE_XSYNC_EXT"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_EXTERNAL_WINDOW_INPUT => "SDL_VIDEO_X11_EXTERNAL_WINDOW_INPUT"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR => "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_NET_WM_PING => "SDL_VIDEO_X11_NET_WM_PING"u8;
@@ -290,6 +294,7 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_GAMEINPUT => "SDL_WINDOWS_GAMEINPUT"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_RAW_KEYBOARD => "SDL_WINDOWS_RAW_KEYBOARD"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_RAW_KEYBOARD_EXCLUDE_HOTKEYS => "SDL_WINDOWS_RAW_KEYBOARD_EXCLUDE_HOTKEYS"u8;
+	public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_RAW_KEYBOARD_INPUTSINK => "SDL_WINDOWS_RAW_KEYBOARD_INPUTSINK"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_FORCE_SEMAPHORE_KERNEL => "SDL_WINDOWS_FORCE_SEMAPHORE_KERNEL"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_INTRESOURCE_ICON => "SDL_WINDOWS_INTRESOURCE_ICON"u8;
 	public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_INTRESOURCE_ICON_SMALL => "SDL_WINDOWS_INTRESOURCE_ICON_SMAL"u8;
@@ -755,6 +760,7 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_REVISION => ""u8;
 	public const float SDL_STANDARD_GRAVITY = 9.80665f;
 	public const float SDL_FLT_EPSILON = 1.1920928955078125e-07F;
+	public static int SDL_stack_free = (void)(data);
 	public const uint SDL_INVALID_UNICODE_CODEPOINT = 0xFFFD;
 	public const double SDL_PI_D = 3.141592653589793238462643383279502884;
 	public const float SDL_PI_F = 3.141592653589793238462643383279502884F;
@@ -779,7 +785,7 @@ public static partial class SDL3
 	public const uint SDL_NS_PER_US = 1000;
 	public const int SDL_MAJOR_VERSION = 3;
 	public const int SDL_MINOR_VERSION = 4;
-	public const int SDL_MICRO_VERSION = 0;
+	public const int SDL_MICRO_VERSION = 14;
 	public static ReadOnlySpan<byte> SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER => "SDL.video.wayland.wl_display"u8;
 	public const ulong SDL_WINDOW_FULLSCREEN = 0x0000000000000001;
 	public const ulong SDL_WINDOW_OPENGL = 0x0000000000000002;
@@ -941,8 +947,11 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_DEVICE_CREATE_SHADERS_METALLIB_BOOLEAN => "SDL.gpu.device.create.shaders.metallib"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_DEVICE_CREATE_D3D12_ALLOW_FEWER_RESOURCE_SLOTS_BOOLEAN => "SDL.gpu.device.create.d3d12.allowtier1resourcebinding"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_DEVICE_CREATE_D3D12_SEMANTIC_NAME_STRING => "SDL.gpu.device.create.d3d12.semantic"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_VERSION_NUMBER => "SDL.gpu.device.create.d3d12.agility_sdk_version"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_PATH_STRING => "SDL.gpu.device.create.d3d12.agility_sdk_path"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_DEVICE_CREATE_VULKAN_REQUIRE_HARDWARE_ACCELERATION_BOOLEAN => "SDL.gpu.device.create.vulkan.requirehardwareacceleration"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER => "SDL.gpu.device.create.vulkan.options"u8;
+	public static ReadOnlySpan<byte> SDL_PROP_GPU_DEVICE_CREATE_METAL_ALLOW_MACFAMILY1_BOOLEAN => "SDL.gpu.device.create.metal.allowmacfamily1"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_DEVICE_NAME_STRING => "SDL.gpu.device.name"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_DEVICE_DRIVER_NAME_STRING => "SDL.gpu.device.driver_name"u8;
 	public static ReadOnlySpan<byte> SDL_PROP_GPU_DEVICE_DRIVER_VERSION_STRING => "SDL.gpu.device.driver_version"u8;

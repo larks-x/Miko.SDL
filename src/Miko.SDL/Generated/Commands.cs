@@ -326,6 +326,7 @@ public unsafe partial class SDL3
 	/// the file.<br/>
 	/// @returns a pointer to the SDL_AsyncIO structure that is created or NULL on<br/>
 	/// failure; call SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -615,6 +616,7 @@ public unsafe partial class SDL3
 	/// results.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -1188,9 +1190,15 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Create a new audio stream.<br/>
+	/// Note that `src_spec` or `dst_spec` may be NULL, but any attempts to<br/>
+	/// put or get data from an audio stream will fail until it has valid<br/>
+	/// specs assigned to both ends of the stream. Specs can be assigned later<br/>
+	/// through SDL_SetAudioStreamFormat(), or binding the stream to an audio<br/>
+	/// device (which will set the format of only the input or output,<br/>
+	/// depending on what kind of device the stream was bound to).<br/>
 	/// <br/>
-	/// @param src_spec the format details of the input audio.<br/>
-	/// @param dst_spec the format details of the output audio.<br/>
+	/// @param src_spec the format details of the input audio. May be NULL.<br/>
+	/// @param dst_spec the format details of the output audio. May be NULL.<br/>
 	/// @returns a new audio stream on success or NULL on failure; call<br/>
 	/// SDL_GetError() for more information.<br/>
 	/// @threadsafety It is safe to call this function from any thread.<br/>
@@ -1263,6 +1271,8 @@ public unsafe partial class SDL3
 	/// dst_spec for playback devices). Attempts to make a change to this side will<br/>
 	/// be ignored, but this will not report an error. The other side's format can<br/>
 	/// be changed.<br/>
+	/// `src_spec` and `dst_spec` may each be NULL; a NULL spec signals not to<br/>
+	/// change the current format for that side of the stream.<br/>
 	/// <br/>
 	/// @param stream the stream the format is being changed.<br/>
 	/// @param src_spec the new format of the audio input; if NULL, it is not<br/>
@@ -1455,7 +1465,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
-	/// @sa SDL_SetAudioStreamInputChannelMap
+	/// @sa SDL_SetAudioStreamOutputChannelMap
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_SetAudioStreamInputChannelMap")]
 	public static partial SDLBool SDL_SetAudioStreamInputChannelMap(SDL_AudioStream stream, int* chmap, int count);
@@ -3686,13 +3696,11 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Poll for currently pending events.<br/>
 	/// If `event` is not NULL, the next event is removed from the queue and stored<br/>
-	/// in the SDL_Event structure pointed to by `event`. The 1 returned refers to<br/>
-	/// this event, immediately stored in the SDL Event structure -- not an event<br/>
-	/// to follow.<br/>
-	/// If `event` is NULL, it simply returns 1 if there is an event in the queue,<br/>
-	/// but will not remove it from the queue.<br/>
+	/// in the SDL_Event structure pointed to by `event`.<br/>
+	/// If `event` is NULL, it simply returns true if there is an event in the<br/>
+	/// queue, but will not remove it from the queue.<br/>
 	/// As this function may implicitly call SDL_PumpEvents(), you can only call<br/>
-	/// this function in the thread that set the video mode.<br/>
+	/// this function in the thread that initialized the video subsystem.<br/>
 	/// SDL_PollEvent() is the favored way of receiving system events since it can<br/>
 	/// be done from the main loop and does not suspend the main loop while waiting<br/>
 	/// on an event to be posted.<br/>
@@ -4324,6 +4332,9 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Get information about a filesystem path.<br/>
+	/// Symlinks, on filesystems that support them, are always followed, so you<br/>
+	/// will always get information on what the symlink eventually points to, and<br/>
+	/// not the symlink itself.<br/>
 	/// <br/>
 	/// @param path the path to query.<br/>
 	/// @param info a pointer filled in with information about the path, or NULL to<br/>
@@ -6267,7 +6278,7 @@ public unsafe partial class SDL3
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
 	/// @sa SDL_RunHapticEffect<br/>
-	/// @sa SDL_StopHapticEffects
+	/// @sa SDL_StopHapticEffect
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_StopHapticEffects")]
 	public static partial SDLBool SDL_StopHapticEffects(SDL_Haptic haptic);
@@ -6972,6 +6983,7 @@ public unsafe partial class SDL3
 	/// @param flags subsystem initialization flags.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -6992,6 +7004,7 @@ public unsafe partial class SDL3
 	/// @param flags any of the flags used by SDL_Init(); see SDL_Init for details.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -7008,6 +7021,7 @@ public unsafe partial class SDL3
 	/// with SDL_QuitSubSystem().<br/>
 	/// <br/>
 	/// @param flags any of the flags used by SDL_Init(); see SDL_Init for details.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -7023,6 +7037,7 @@ public unsafe partial class SDL3
 	/// @param flags any of the flags used by SDL_Init(); see SDL_Init for details.<br/>
 	/// @returns a mask of all initialized subsystems if `flags` is 0, otherwise it<br/>
 	/// returns the initialization status of the specified subsystems.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -7040,6 +7055,7 @@ public unsafe partial class SDL3
 	/// You can use this function with atexit() to ensure that it is run when your<br/>
 	/// application is shutdown, but it is not wise to do this from a library or<br/>
 	/// other dynamically loaded code.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -9937,6 +9953,7 @@ public unsafe partial class SDL3
 	/// call SDL_GetError() for more information. This is a single<br/>
 	/// allocation that should be freed with SDL_free() when it is no<br/>
 	/// longer needed.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -10301,7 +10318,8 @@ public unsafe partial class SDL3
 	/// <summary>
 	/// Get the default log output function.<br/>
 	/// <br/>
-	/// @returns the default log output callback.<br/>
+	/// @returns the default log output callback. It should be called with NULL for<br/>
+	/// the userdata argument.<br/>
 	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
@@ -10368,6 +10386,7 @@ public unsafe partial class SDL3
 	/// copied.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -10404,6 +10423,7 @@ public unsafe partial class SDL3
 	/// @param window the parent window, or NULL for no parent.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -10428,6 +10448,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param window the window.<br/>
 	/// @returns handle NSView or UIView.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -10443,6 +10464,7 @@ public unsafe partial class SDL3
 	/// called after SDL_CreateWindow.<br/>
 	/// <br/>
 	/// @param view the SDL_MetalView object.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -10456,6 +10478,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param view the SDL_MetalView object.<br/>
 	/// @returns a pointer.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -10484,6 +10507,7 @@ public unsafe partial class SDL3
 	/// local files, if supported.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -11049,6 +11073,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @returns the initialized and unlocked mutex or NULL on failure; call<br/>
 	/// SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11073,6 +11098,7 @@ public unsafe partial class SDL3
 	/// block until it can lock the mutex, and return with it locked.<br/>
 	/// <br/>
 	/// @param mutex the mutex to lock.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11092,6 +11118,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param mutex the mutex to try to lock.<br/>
 	/// @returns true on success, false if the mutex would block.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11110,6 +11137,8 @@ public unsafe partial class SDL3
 	/// thread, and doing so results in undefined behavior.<br/>
 	/// <br/>
 	/// @param mutex the mutex to unlock.<br/>
+	/// @threadsafety This call must be paired with a previous locking call on the<br/>
+	/// same thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11128,6 +11157,7 @@ public unsafe partial class SDL3
 	/// on the platform.<br/>
 	/// <br/>
 	/// @param mutex the mutex to destroy.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11161,6 +11191,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @returns the initialized and unlocked read/write lock or NULL on failure;<br/>
 	/// call SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11197,6 +11228,7 @@ public unsafe partial class SDL3
 	/// block until it can lock the mutex, and return with it locked.<br/>
 	/// <br/>
 	/// @param rwlock the read/write lock to lock.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11225,6 +11257,7 @@ public unsafe partial class SDL3
 	/// block until it can lock the mutex, and return with it locked.<br/>
 	/// <br/>
 	/// @param rwlock the read/write lock to lock.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11247,6 +11280,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param rwlock the rwlock to try to lock.<br/>
 	/// @returns true on success, false if the lock would block.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11273,6 +11307,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param rwlock the rwlock to try to lock.<br/>
 	/// @returns true on success, false if the lock would block.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11295,6 +11330,8 @@ public unsafe partial class SDL3
 	/// thread, and doing so results in undefined behavior.<br/>
 	/// <br/>
 	/// @param rwlock the rwlock to unlock.<br/>
+	/// @threadsafety This call must be paired with a previous locking call on the<br/>
+	/// same thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11315,6 +11352,7 @@ public unsafe partial class SDL3
 	/// undefined behavior depending on the platform.<br/>
 	/// <br/>
 	/// @param rwlock the rwlock to destroy.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11334,6 +11372,7 @@ public unsafe partial class SDL3
 	/// @param initial_value the starting value of the semaphore.<br/>
 	/// @returns a new semaphore or NULL on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11353,6 +11392,7 @@ public unsafe partial class SDL3
 	/// waiting on it.<br/>
 	/// <br/>
 	/// @param sem the semaphore to destroy.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11370,6 +11410,7 @@ public unsafe partial class SDL3
 	/// a time length of -1.<br/>
 	/// <br/>
 	/// @param sem the semaphore wait on.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11389,6 +11430,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param sem the semaphore to wait on.<br/>
 	/// @returns true if the wait succeeds, false if the wait would block.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11409,6 +11451,7 @@ public unsafe partial class SDL3
 	/// @param timeoutMS the length of the timeout, in milliseconds, or -1 to wait<br/>
 	/// indefinitely.<br/>
 	/// @returns true if the wait succeeds or false if the wait times out.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11423,6 +11466,7 @@ public unsafe partial class SDL3
 	/// Atomically increment a semaphore's value and wake waiting threads.<br/>
 	/// <br/>
 	/// @param sem the semaphore to increment.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11438,6 +11482,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param sem the semaphore to query.<br/>
 	/// @returns the current value of the semaphore.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -11449,6 +11494,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @returns a new condition variable or NULL on failure; call SDL_GetError()<br/>
 	/// for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11465,6 +11511,7 @@ public unsafe partial class SDL3
 	/// Destroy a condition variable.<br/>
 	/// <br/>
 	/// @param cond the condition variable to destroy.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -11891,6 +11938,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @returns the name of the platform. If the correct platform name is not<br/>
 	/// available, returns a string beginning with the text "Unknown".<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -11927,6 +11975,7 @@ public unsafe partial class SDL3
 	/// is no battery.<br/>
 	/// @returns the current battery state or `SDL_POWERSTATE_ERROR` on failure;<br/>
 	/// call SDL_GetError() for more information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -11938,6 +11987,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @returns a valid property ID on success or 0 on failure; call<br/>
 	/// SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -12523,6 +12573,7 @@ public unsafe partial class SDL3
 	/// @param result an SDL_Rect structure filled in with the intersection of<br/>
 	/// rectangles `A` and `B`.<br/>
 	/// @returns true if there is an intersection, false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -12540,6 +12591,7 @@ public unsafe partial class SDL3
 	/// `A` and `B`.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -12559,6 +12611,7 @@ public unsafe partial class SDL3
 	/// rectangle.<br/>
 	/// @returns true if any points were enclosed or false if all the points were<br/>
 	/// outside of the clipping rectangle.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -12579,6 +12632,7 @@ public unsafe partial class SDL3
 	/// @param X2 a pointer to the ending X-coordinate of the line.<br/>
 	/// @param Y2 a pointer to the ending Y-coordinate of the line.<br/>
 	/// @returns true if there is an intersection, false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -12685,10 +12739,11 @@ public unsafe partial class SDL3
 	/// @param A an SDL_FRect structure representing the first rectangle.<br/>
 	/// @param B an SDL_FRect structure representing the second rectangle.<br/>
 	/// @returns true if there is an intersection, false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
-	/// @sa SDL_GetRectIntersection
+	/// @sa SDL_GetRectIntersectionFloat
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_HasRectIntersectionFloat")]
 	public static partial SDLBool SDL_HasRectIntersectionFloat(RectangleF* A, RectangleF* B);
@@ -12702,6 +12757,7 @@ public unsafe partial class SDL3
 	/// @param result an SDL_FRect structure filled in with the intersection of<br/>
 	/// rectangles `A` and `B`.<br/>
 	/// @returns true if there is an intersection, false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -12719,6 +12775,7 @@ public unsafe partial class SDL3
 	/// `A` and `B`.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -12739,6 +12796,7 @@ public unsafe partial class SDL3
 	/// rectangle.<br/>
 	/// @returns true if any points were enclosed or false if all the points were<br/>
 	/// outside of the clipping rectangle.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -12760,6 +12818,7 @@ public unsafe partial class SDL3
 	/// @param X2 a pointer to the ending X-coordinate of the line.<br/>
 	/// @param Y2 a pointer to the ending Y-coordinate of the line.<br/>
 	/// @returns true if there is an intersection, false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -13279,8 +13338,6 @@ public unsafe partial class SDL3
 	/// associated with the V plane of a YUV texture, if you want to wrap an<br/>
 	/// existing texture.<br/>
 	/// With the opengles2 renderer:<br/>
-	/// - `SDL_PROP_TEXTURE_CREATE_OPENGLES2_TEXTURE_NUMBER`: the GLuint texture<br/>
-	/// associated with the texture, if you want to wrap an existing texture.<br/>
 	/// - `SDL_PROP_TEXTURE_CREATE_OPENGLES2_TEXTURE_NUMBER`: the GLuint texture<br/>
 	/// associated with the texture, if you want to wrap an existing texture.<br/>
 	/// - `SDL_PROP_TEXTURE_CREATE_OPENGLES2_TEXTURE_UV_NUMBER`: the GLuint texture<br/>
@@ -14856,6 +14913,7 @@ public unsafe partial class SDL3
 	/// coordinates in SDL_RenderGeometry().<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.4.0.<br/>
 	/// <br/>
@@ -14878,6 +14936,7 @@ public unsafe partial class SDL3
 	/// be NULL.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.4.0.<br/>
 	/// <br/>
@@ -15864,6 +15923,7 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Get the value of a variable in the environment.<br/>
+	/// The name of the variable is case sensitive on all platforms.<br/>
 	/// This function uses SDL's cached copy of the environment and is thread-safe.<br/>
 	/// <br/>
 	/// @param name the name of the variable to get.<br/>
@@ -15891,6 +15951,10 @@ public unsafe partial class SDL3
 	/// Get the value of a variable in the environment.<br/>
 	/// This function bypasses SDL's cached copy of the environment and is not<br/>
 	/// thread-safe.<br/>
+	/// On some platforms, this may make case-insensitive matches, while other<br/>
+	/// platforms are case-sensitive. It is best to be precise with strings used<br/>
+	/// for queries through this interface. SDL_getenv is always case-sensitive,<br/>
+	/// however.<br/>
 	/// <br/>
 	/// @param name the name of the variable to get.<br/>
 	/// @returns a pointer to the value of the variable or NULL if it can't be<br/>
@@ -20060,6 +20124,7 @@ public unsafe partial class SDL3
 	/// @param fromcode The source character encoding, must not be NULL.<br/>
 	/// @returns a handle that must be freed with SDL_iconv_close, or<br/>
 	/// SDL_ICONV_ERROR on failure.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20081,6 +20146,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param cd The character set conversion handle.<br/>
 	/// @returns 0 on success, or -1 on failure.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20117,6 +20183,7 @@ public unsafe partial class SDL3
 	/// @param outbuf Address of variable that points to the output buffer.<br/>
 	/// @param outbytesleft The number of bytes in the output buffer.<br/>
 	/// @returns the number of conversions on success, or a negative error code.<br/>
+	/// @threadsafety Do not use the same SDL_iconv_t from two threads at once.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20142,6 +20209,7 @@ public unsafe partial class SDL3
 	/// @param inbuf the string to convert to a different encoding.<br/>
 	/// @param inbytesleft the size of the input string _in bytes_.<br/>
 	/// @returns a new string, converted to the new encoding, or NULL on error.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -20501,7 +20569,7 @@ public unsafe partial class SDL3
 	/// Remove a file or an empty directory in a writable storage container.<br/>
 	/// <br/>
 	/// @param storage a storage container.<br/>
-	/// @param path the path of the directory to enumerate.<br/>
+	/// @param path the path to remove from the filesystem.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
 	/// <br/>
@@ -22224,6 +22292,7 @@ public unsafe partial class SDL3
 	/// @returns an opaque pointer to the new thread object on success, NULL if the<br/>
 	/// new thread could not be created; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22245,6 +22314,7 @@ public unsafe partial class SDL3
 	/// @returns an opaque pointer to the new thread object on success, NULL if the<br/>
 	/// new thread could not be created; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22257,6 +22327,7 @@ public unsafe partial class SDL3
 	/// @param thread the thread to query.<br/>
 	/// @returns a pointer to a UTF-8 string that names the specified thread, or<br/>
 	/// NULL if it doesn't have a name.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22277,6 +22348,7 @@ public unsafe partial class SDL3
 	/// thread.<br/>
 	/// <br/>
 	/// @returns the ID of the current thread.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -22294,6 +22366,7 @@ public unsafe partial class SDL3
 	/// @param thread the thread to query.<br/>
 	/// @returns the ID of the specified thread, or the ID of the current thread if<br/>
 	/// `thread` is NULL.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -22311,6 +22384,7 @@ public unsafe partial class SDL3
 	/// @param priority the SDL_ThreadPriority to set.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22338,6 +22412,8 @@ public unsafe partial class SDL3
 	/// @param status a pointer filled in with the value returned from the thread<br/>
 	/// function by its 'return', or -1 if the thread has been<br/>
 	/// detached or isn't valid, may be NULL.<br/>
+	/// @threadsafety It is safe to call this function from any thread, but only a<br/>
+	/// single thread can wait any specific thread to finish.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -22353,6 +22429,7 @@ public unsafe partial class SDL3
 	/// @param thread the thread to query.<br/>
 	/// @returns the current state of a thread, or SDL_THREAD_UNKNOWN if the thread<br/>
 	/// isn't valid.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -22383,6 +22460,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param thread the SDL_Thread pointer that was returned from the<br/>
 	/// SDL_CreateThread() call that started this thread.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -22457,6 +22535,7 @@ public unsafe partial class SDL3
 	/// format, may be NULL.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22470,6 +22549,7 @@ public unsafe partial class SDL3
 	/// @param ticks the SDL_Time to hold the returned tick count.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22487,6 +22567,7 @@ public unsafe partial class SDL3
 	/// Time (UTC).<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22502,6 +22583,7 @@ public unsafe partial class SDL3
 	/// @param ticks the resulting SDL_Time.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22518,6 +22600,7 @@ public unsafe partial class SDL3
 	/// Windows FILETIME value.<br/>
 	/// @param dwHighDateTime a pointer filled in with the high portion of the<br/>
 	/// Windows FILETIME value.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22533,6 +22616,7 @@ public unsafe partial class SDL3
 	/// @param dwLowDateTime the low portion of the Windows FILETIME value.<br/>
 	/// @param dwHighDateTime the high portion of the Windows FILETIME value.<br/>
 	/// @returns the converted SDL time.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22546,6 +22630,7 @@ public unsafe partial class SDL3
 	/// @param month the month [1-12].<br/>
 	/// @returns the number of days in the requested month or -1 on failure; call<br/>
 	/// SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22560,6 +22645,7 @@ public unsafe partial class SDL3
 	/// @param day the day component of the date.<br/>
 	/// @returns the day of year [0-365] if the date is valid or -1 on failure;<br/>
 	/// call SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22574,6 +22660,7 @@ public unsafe partial class SDL3
 	/// @param day the day component of the date.<br/>
 	/// @returns a value between 0 and 6 (0 being Sunday) if the date is valid or<br/>
 	/// -1 on failure; call SDL_GetError() for more information.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -22838,6 +22925,7 @@ public unsafe partial class SDL3
 	/// This function may be called safely at any time, even before SDL_Init().<br/>
 	/// <br/>
 	/// @returns the version of the linked library.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -22862,6 +22950,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @returns an arbitrary string, uniquely identifying the exact revision of<br/>
 	/// the SDL library in use.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -25718,6 +25807,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param callback the SDL_WindowsMessageHook function to call.<br/>
 	/// @param userdata a pointer to pass to every iteration of `callback`.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -25765,6 +25855,7 @@ public unsafe partial class SDL3
 	/// <br/>
 	/// @param callback the SDL_X11EventHook function to call.<br/>
 	/// @param userdata a pointer to pass to every iteration of `callback`.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -25794,6 +25885,7 @@ public unsafe partial class SDL3
 	/// @param callbackParam a pointer that is passed to `callback`.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -25807,6 +25899,7 @@ public unsafe partial class SDL3
 	/// This function is only available on Apple iOS.<br/>
 	/// <br/>
 	/// @param enabled true to enable the event pump, false to disable it.<br/>
+	/// @threadsafety This function should only be called on the main thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -25887,6 +25980,7 @@ public unsafe partial class SDL3
 	/// - API level 10: Android 2.3.3 (GINGERBREAD_MR1)<br/>
 	/// <br/>
 	/// @returns the Android API level.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -25897,6 +25991,7 @@ public unsafe partial class SDL3
 	/// Query if the application is running on a Chromebook.<br/>
 	/// <br/>
 	/// @returns true if this is a Chromebook, false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -25907,6 +26002,7 @@ public unsafe partial class SDL3
 	/// Query if the application is running on a Samsung DeX docking station.<br/>
 	/// <br/>
 	/// @returns true if this is a DeX docking station, false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -26099,6 +26195,7 @@ public unsafe partial class SDL3
 	/// If SDL can't determine this, it will return false.<br/>
 	/// <br/>
 	/// @returns true if the device is a tablet, false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -26110,6 +26207,7 @@ public unsafe partial class SDL3
 	/// If SDL can't determine this, it will return false.<br/>
 	/// <br/>
 	/// @returns true if the device is a TV, false otherwise.<br/>
+	/// @threadsafety It is safe to call this function from any thread.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -26363,6 +26461,21 @@ public unsafe partial class SDL3
 	/// useful for targeting Intel Haswell and Broadwell GPUs; other hardware<br/>
 	/// either supports Tier 2 Resource Binding or does not support D3D12 in any<br/>
 	/// capacity. Defaults to false.<br/>
+	/// - `SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_VERSION_NUMBER`: Certain<br/>
+	/// feature checks are only possible on Windows 11 by default. By setting<br/>
+	/// this alongside `SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_PATH_STRING`<br/>
+	/// and vendoring D3D12Core.dll from the D3D12 Agility SDK, you can make<br/>
+	/// those feature checks possible on older platforms. The version you provide<br/>
+	/// must match the one given in the DLL.<br/>
+	/// - `SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_PATH_STRING`: Certain<br/>
+	/// feature checks are only possible on Windows 11 by default. By setting<br/>
+	/// this alongside<br/>
+	/// `SDL_PROP_GPU_DEVICE_CREATE_D3D12_AGILITY_SDK_VERSION_NUMBER` and<br/>
+	/// vendoring D3D12Core.dll from the D3D12 Agility SDK, you can make those<br/>
+	/// feature checks possible on older platforms. The path you provide must be<br/>
+	/// relative to the executable path of your app. Be sure not to put the DLL<br/>
+	/// in the same directory as the exe; Microsoft strongly advises against<br/>
+	/// this!<br/>
 	/// With the Vulkan backend:<br/>
 	/// - `SDL_PROP_GPU_DEVICE_CREATE_VULKAN_REQUIRE_HARDWARE_ACCELERATION_BOOLEAN`:<br/>
 	/// By default, Vulkan device enumeration includes drivers of all types,<br/>
@@ -26375,6 +26488,14 @@ public unsafe partial class SDL3
 	/// This allows configuring a variety of Vulkan-specific options such as<br/>
 	/// increasing the API version and opting into extensions aside from the<br/>
 	/// minimal set SDL requires.<br/>
+	/// With the Metal backend: -<br/>
+	/// `SDL_PROP_GPU_DEVICE_CREATE_METAL_ALLOW_MACFAMILY1_BOOLEAN`: By default,<br/>
+	/// macOS support requires what Apple calls "MTLGPUFamilyMac2" hardware or<br/>
+	/// newer. However, an application can set this property to true to enable<br/>
+	/// support for "MTLGPUFamilyMac1" hardware, if (and only if) the application<br/>
+	/// does not write to sRGB textures. (For history's sake: MacFamily1 also does<br/>
+	/// not support indirect command buffers, MSAA depth resolve, and stencil<br/>
+	/// resolve/feedback, but these are not exposed features in SDL_GPU.)<br/>
 	/// <br/>
 	/// @param props the properties to use.<br/>
 	/// @returns a GPU context on success or NULL on failure; call SDL_GetError()<br/>
@@ -28251,6 +28372,7 @@ public unsafe partial class SDL3
 	/// redefine main() as SDL_main(). Thus to ensure that your main() function<br/>
 	/// will not be changed it is necessary to define SDL_MAIN_HANDLED before<br/>
 	/// including SDL.h.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.<br/>
 	/// <br/>
@@ -28334,6 +28456,7 @@ public unsafe partial class SDL3
 	/// will use `GetModuleHandle(NULL)` instead.<br/>
 	/// @returns true on success or false on failure; call SDL_GetError() for more<br/>
 	/// information.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -28355,6 +28478,7 @@ public unsafe partial class SDL3
 	/// paired with a prior call to SDL_RegisterApp. The window class will only be<br/>
 	/// deregistered when the registration counter in SDL_RegisterApp decrements to<br/>
 	/// zero through calls to this function.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
 	/// @since This function is available since SDL 3.2.0.
 	/// </summary>
@@ -28363,10 +28487,21 @@ public unsafe partial class SDL3
 
 	/// <summary>
 	/// Callback from the application to let the suspend continue.<br/>
+	/// This should be called from an event watch in response to an<br/>
+	/// `SDL_EVENT_DID_ENTER_BACKGROUND` event.<br/>
+	/// When using SDL_Render, your event watch should be added _after_ creating<br/>
+	/// the `SDL_Renderer`; this allows the timing of the D3D12 command queue<br/>
+	/// suspension to execute in the correct order.<br/>
+	/// When using SDL_GPU, this should be called after calling SDL_GDKSuspendGPU.<br/>
+	/// If you're writing your own D3D12 renderer, this should be called after<br/>
+	/// calling `ID3D12CommandQueue::SuspendX`.<br/>
 	/// This function is only needed for Xbox GDK support; all other platforms will<br/>
 	/// do nothing and set an "unsupported" error message.<br/>
+	/// @threadsafety This function is not thread safe.<br/>
 	/// <br/>
-	/// @since This function is available since SDL 3.2.0.
+	/// @since This function is available since SDL 3.2.0.<br/>
+	/// <br/>
+	/// @sa SDL_AddEventWatch
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_GDKSuspendComplete")]
 	public static partial void SDL_GDKSuspendComplete();
@@ -28932,7 +29067,7 @@ public unsafe partial class SDL3
 	/// @sa SDL_GetTrayEntryChecked
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryChecked")]
-	public static partial void SDL_SetTrayEntryChecked(SDL_TrayEntry entry, SDLBool bchecked);
+	public static partial void SDL_SetTrayEntryChecked(SDL_TrayEntry entry, SDLBool checked);
 
 	/// <summary>
 	/// Gets whether or not an entry is checked.<br/>

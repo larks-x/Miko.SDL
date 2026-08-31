@@ -507,7 +507,7 @@ public partial struct SDL_MouseMotionEvent
 	/// </summary>
 	public SDL_WindowID windowID;
 	/// <summary>
-	/// The mouse instance id in relative mode, SDL_TOUCH_MOUSEID for touch events, or 0
+	/// The mouse instance id in relative mode, SDL_TOUCH_MOUSEID for touch events, SDL_PEN_MOUSEID for pen events, or 0
 	/// </summary>
 	public SDL_MouseID which;
 	/// <summary>
@@ -3609,11 +3609,12 @@ public partial struct SDL_GPUViewport
 /// height of passed SDL_GPUTextureRegion to SDL_UploadToGPUTexture or<br/>
 /// SDL_DownloadFromGPUTexture are used as default values respectively and data<br/>
 /// is considered to be tightly packed.<br/>
-/// **WARNING**: Direct3D 12 requires texture data row pitch to be 256 byte<br/>
-/// aligned, and offsets to be aligned to 512 bytes. If they are not, SDL will<br/>
-/// make a temporary copy of the data that is properly aligned, but this adds<br/>
-/// overhead to the transfer process. Apps can avoid this by aligning their<br/>
-/// data appropriately, or using a different GPU backend than Direct3D 12.<br/>
+/// **WARNING**: On some older/integrated hardware, Direct3D 12 requires<br/>
+/// texture data row pitch to be 256 byte aligned, and offsets to be aligned to<br/>
+/// 512 bytes. If they are not, SDL will make a temporary copy of the data that<br/>
+/// is properly aligned, but this adds overhead to the transfer process. Apps<br/>
+/// can avoid this by aligning their data appropriately, or using a different<br/>
+/// GPU backend than Direct3D 12.<br/>
 /// <br/>
 /// @since This struct is available since SDL 3.2.0.<br/>
 /// <br/>

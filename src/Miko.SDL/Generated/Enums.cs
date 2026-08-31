@@ -1029,9 +1029,8 @@ public enum SDL_Folder
 
 /// <summary>
 /// Types of filesystem entries.<br/>
-/// Note that there may be other sorts of items on a filesystem: devices,<br/>
-/// symlinks, named pipes, etc. They are currently reported as<br/>
-/// SDL_PATHTYPE_OTHER.<br/>
+/// Note that there may be other sorts of items on a filesystem: devices, named<br/>
+/// pipes, etc. They are currently reported as SDL_PATHTYPE_OTHER.<br/>
 /// <br/>
 /// @since This enum is available since SDL 3.2.0.<br/>
 /// <br/>
@@ -1191,27 +1190,27 @@ public enum SDL_GamepadButton
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_DPAD_RIGHT</unmanaged>
 	DpadRight = 14,
 	/// <summary>
-	/// Additional button (e.g. Xbox Series X share button, PS5 microphone button, Nintendo Switch Pro capture button, Amazon Luna microphone button, Google Stadia capture button)
+	/// Additional button (e.g. Xbox Series X share button, PS5 microphone button, Nintendo Switch Pro capture button, Steam Controller QAM button, Amazon Luna microphone button, Google Stadia capture button)
 	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_MISC1</unmanaged>
 	Misc1 = 15,
 	/// <summary>
-	/// Upper or primary paddle, under your right hand (e.g. Xbox Elite paddle P1, DualSense Edge RB button, Right Joy-Con SR button)
+	/// Upper or primary paddle, under your right hand (e.g. Xbox Elite paddle P1, DualSense Edge RB button, Right Joy-Con SR button, Steam Controller R4 button)
 	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1</unmanaged>
 	RightPaddle1 = 16,
 	/// <summary>
-	/// Upper or primary paddle, under your left hand (e.g. Xbox Elite paddle P3, DualSense Edge LB button, Left Joy-Con SL button)
+	/// Upper or primary paddle, under your left hand (e.g. Xbox Elite paddle P3, DualSense Edge LB button, Left Joy-Con SL button, Steam Controller L4 button)
 	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE1</unmanaged>
 	LeftPaddle1 = 17,
 	/// <summary>
-	/// Lower or secondary paddle, under your right hand (e.g. Xbox Elite paddle P2, DualSense Edge right Fn button, Right Joy-Con SL button)
+	/// Lower or secondary paddle, under your right hand (e.g. Xbox Elite paddle P2, DualSense Edge right Fn button, Right Joy-Con SL button, Steam Controller R5 button)
 	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2</unmanaged>
 	RightPaddle2 = 18,
 	/// <summary>
-	/// Lower or secondary paddle, under your left hand (e.g. Xbox Elite paddle P4, DualSense Edge left Fn button, Left Joy-Con SR button)
+	/// Lower or secondary paddle, under your left hand (e.g. Xbox Elite paddle P4, DualSense Edge left Fn button, Left Joy-Con SR button, Steam Controller L5 button)
 	/// </summary>
 	/// <unmanaged>SDL_GAMEPAD_BUTTON_LEFT_PADDLE2</unmanaged>
 	LeftPaddle2 = 19,
