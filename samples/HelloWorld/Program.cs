@@ -31,7 +31,7 @@ public static unsafe class Program
         if (SDL_Init(SDL_InitFlags.Video | SDL_InitFlags.Gamepad) == false)
         {
             var error = SDL_GetError();
-            throw new Exception($"Failed to start SDL2: {error}");
+            throw new Exception($"Failed to start SDL: {error}");
         }
 
         if (!SDL_Vulkan_LoadLibrary())
