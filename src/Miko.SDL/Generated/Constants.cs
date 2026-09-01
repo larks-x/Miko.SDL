@@ -760,7 +760,6 @@ public static partial class SDL3
 	public static ReadOnlySpan<byte> SDL_REVISION => ""u8;
 	public const float SDL_STANDARD_GRAVITY = 9.80665f;
 	public const float SDL_FLT_EPSILON = 1.1920928955078125e-07F;
-
 	public const uint SDL_INVALID_UNICODE_CODEPOINT = 0xFFFD;
 	public const double SDL_PI_D = 3.141592653589793238462643383279502884;
 	public const float SDL_PI_F = 3.141592653589793238462643383279502884F;

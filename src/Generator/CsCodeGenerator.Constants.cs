@@ -1,4 +1,4 @@
-﻿// Copyright (c) Amer Koleci and Contributors.
+// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using CppAst;
@@ -78,6 +78,12 @@ partial class CsCodeGenerator
     {
         foreach (CppMacro cppMacro in compilation.Macros)
         {
+            // 函数式宏（带参数，如 SDL_stack_free(data)）不是常量，跳过以免生成非法 C# 代码
+            if (cppMacro.Parameters is { Count: > 0 })
+            {
+                continue;
+            }
+
             if (string.IsNullOrEmpty(cppMacro.Value)
                 || cppMacro.Name.EndsWith("_H_", StringComparison.OrdinalIgnoreCase)
                 || cppMacro.Name.Equals("SDL_SCANCODE_TO_KEYCODE", StringComparison.OrdinalIgnoreCase)

@@ -29067,7 +29067,7 @@ public unsafe partial class SDL3
 	/// @sa SDL_GetTrayEntryChecked
 	/// </summary>
 	[LibraryImport(LibName, EntryPoint = "SDL_SetTrayEntryChecked")]
-	public static partial void SDL_SetTrayEntryChecked(SDL_TrayEntry entry, SDLBool check);
+	public static partial void SDL_SetTrayEntryChecked(SDL_TrayEntry entry, SDLBool @checked);
 
 	/// <summary>
 	/// Gets whether or not an entry is checked.<br/>
